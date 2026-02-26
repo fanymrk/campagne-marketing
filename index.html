@@ -1,162 +1,584 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Squaly — Accès Anticipé | FFCK</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,500;0,700;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ocean: #003D5C;
+      --wave: #0076A8;
+      --foam: #00C4E8;
+      --sun:  #FFB703;
+      --sand: #F5EFE6;
+      --dark: #001A26;
+    }
 
-<title>SQUALY — Vente exclusive FFCK</title>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-<!-- Google Font (charte FFCK : Raleway) -->
-<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;700;900&display=swap" rel="stylesheet">
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--sand);
+      color: var(--dark);
+      overflow-x: hidden;
+    }
 
-<style>
-:root{
-  --ffck-dark:#20265b;
-  --ffck-blue:#69b9e6;
-  --ffck-red:#c41c1d;
-}
+    /* ─── HERO ───────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      background: var(--ocean);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 0 40px;
+      overflow: hidden;
+    }
 
-body{
-  margin:0;
-  font-family:'Raleway',sans-serif;
-  background:#f5f7fb;
-  color:#222;
-}
+    /* Animated water background */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 160% 80% at 50% 110%, var(--foam) 0%, transparent 55%),
+        radial-gradient(ellipse 200% 60% at 80% 100%, var(--wave) 0%, transparent 50%),
+        linear-gradient(175deg, var(--dark) 0%, var(--ocean) 50%, var(--wave) 100%);
+      z-index: 0;
+    }
 
-.hero{
-  background:linear-gradient(160deg,var(--ffck-dark),#1e4385);
-  color:white;
-  padding:40px 20px 60px;
-  text-align:center;
-  position:relative;
-  overflow:hidden;
-}
+    /* Wave shapes */
+    .waves {
+      position: absolute;
+      bottom: 0; left: -5%; right: -5%;
+      height: 55%;
+      z-index: 1;
+    }
+    .wave {
+      position: absolute;
+      width: 110%;
+      left: -5%;
+      border-radius: 50%;
+    }
+    .wave1 {
+      bottom: -20px; height: 200px;
+      background: rgba(0,196,232,.15);
+      animation: swell 6s ease-in-out infinite;
+    }
+    .wave2 {
+      bottom: -30px; height: 160px;
+      background: rgba(0,118,168,.25);
+      animation: swell 8s ease-in-out infinite reverse;
+    }
+    .wave3 {
+      bottom: -50px; height: 120px;
+      background: rgba(0,61,92,.5);
+      animation: swell 5s ease-in-out infinite 1s;
+    }
+    @keyframes swell {
+      0%,100% { transform: scaleX(1) translateY(0); }
+      50%      { transform: scaleX(1.04) translateY(-12px); }
+    }
 
-.badge{
-  background:var(--ffck-red);
-  padding:8px 16px;
-  border-radius:50px;
-  font-weight:700;
-  display:inline-block;
-  margin-bottom:15px;
-}
+    /* Badge urgence */
+    .badge-urgence {
+      position: absolute;
+      top: 24px; right: 20px;
+      background: var(--sun);
+      color: var(--dark);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 13px;
+      letter-spacing: .08em;
+      padding: 6px 14px;
+      border-radius: 2px;
+      z-index: 10;
+      animation: pulse-badge 2s ease-in-out infinite;
+    }
+    @keyframes pulse-badge {
+      0%,100% { transform: scale(1); }
+      50%      { transform: scale(1.05); }
+    }
 
-.hero h1{
-  font-size:34px;
-  margin:10px 0;
-  font-weight:900;
-}
+    /* Badge FFCK */
+    .badge-ffck {
+      position: absolute;
+      top: 20px; left: 20px;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.25);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      border-radius: 2px;
+      z-index: 10;
+      backdrop-filter: blur(6px);
+    }
 
-.hero p{
-  opacity:.9;
-  margin-bottom:25px;
-}
+    /* Boat image */
+    .boat-wrap {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -58%);
+      width: 115%;
+      max-width: 480px;
+      z-index: 5;
+      animation: float 4s ease-in-out infinite;
+      filter: drop-shadow(0 30px 60px rgba(0,0,0,.5));
+    }
+    .boat-wrap img { width: 100%; height: auto; }
 
-.boat-img{
-  width:100%;
-  max-width:420px;
-  margin:20px auto;
-  display:block;
-  filter:drop-shadow(0 20px 30px rgba(0,0,0,.35));
-}
+    @keyframes float {
+      0%,100% { transform: translate(-50%, -58%) rotate(-1deg); }
+      50%      { transform: translate(-50%, -62%) rotate(1deg); }
+    }
 
-.cta{
-  display:block;
-  background:var(--ffck-blue);
-  color:#0c1b2a;
-  text-decoration:none;
-  padding:18px;
-  border-radius:14px;
-  font-weight:800;
-  font-size:18px;
-  margin:25px auto 12px;
-  max-width:320px;
-  transition:.2s;
-}
+    /* Hero text */
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      padding: 0 24px;
+      text-align: center;
+    }
 
-.cta:hover{
-  transform:scale(1.05);
-  background:#8fd0f0;
-}
+    .eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--foam);
+      margin-bottom: 8px;
+    }
 
-.urgency{
-  color:#ffdede;
-  font-weight:600;
-}
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(72px, 20vw, 96px);
+      line-height: .9;
+      color: #fff;
+      letter-spacing: .02em;
+      margin-bottom: 4px;
+    }
+    .hero-title span {
+      color: var(--foam);
+      display: block;
+    }
 
-.section{
-  padding:35px 22px;
-  max-width:500px;
-  margin:auto;
-}
+    .hero-sub {
+      font-size: 15px;
+      font-weight: 300;
+      color: rgba(255,255,255,.75);
+      line-height: 1.5;
+      margin-bottom: 28px;
+      max-width: 320px;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-.features{
-  display:grid;
-  gap:18px;
-}
+    /* Stock bar */
+    .stock-bar {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(8px);
+    }
+    .stock-bar-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .stock-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.6);
+    }
+    .stock-count {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      color: var(--sun);
+      letter-spacing: .05em;
+    }
+    .progress-track {
+      height: 6px;
+      background: rgba(255,255,255,.15);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 72%;
+      background: linear-gradient(90deg, var(--foam), var(--sun));
+      border-radius: 3px;
+      animation: fill-anim .8s ease-out forwards;
+      transform-origin: left;
+    }
+    @keyframes fill-anim {
+      from { width: 0; }
+      to   { width: 72%; }
+    }
+    .stock-note {
+      font-size: 10px;
+      color: rgba(255,255,255,.45);
+      margin-top: 6px;
+      text-align: right;
+    }
 
-.card{
-  background:white;
-  padding:18px;
-  border-radius:16px;
-  box-shadow:0 8px 18px rgba(0,0,0,.08);
-}
+    /* CTA */
+    .cta-primary {
+      display: block;
+      width: 100%;
+      background: var(--sun);
+      color: var(--dark);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: .12em;
+      text-align: center;
+      padding: 18px 24px;
+      border-radius: 4px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+      box-shadow: 0 8px 32px rgba(255,183,3,.4);
+    }
+    .cta-primary:active {
+      transform: scale(.97);
+      box-shadow: 0 4px 16px rgba(255,183,3,.3);
+    }
+    .cta-note {
+      font-size: 11px;
+      color: rgba(255,255,255,.4);
+      margin-top: 10px;
+      text-align: center;
+    }
 
-footer{
-  text-align:center;
-  padding:25px;
-  font-size:14px;
-  opacity:.7;
-}
-</style>
+    /* ─── FEATURES ───────────────────────────────── */
+    .section {
+      padding: 56px 24px 40px;
+    }
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--wave);
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 38px;
+      line-height: 1;
+      color: var(--ocean);
+      margin-bottom: 20px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .feature-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px 16px;
+      border: 1px solid rgba(0,61,92,.08);
+    }
+    .feature-card:first-child {
+      grid-column: 1 / -1;
+      background: var(--ocean);
+      color: #fff;
+    }
+    .feat-icon {
+      font-size: 28px;
+      margin-bottom: 10px;
+      display: block;
+    }
+    .feat-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: .04em;
+      color: var(--ocean);
+      margin-bottom: 4px;
+    }
+    .feature-card:first-child .feat-title { color: var(--foam); }
+    .feat-body {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.5;
+      color: rgba(0,26,38,.65);
+    }
+    .feature-card:first-child .feat-body { color: rgba(255,255,255,.7); }
+
+    /* ─── ACCÈS ANTICIPÉ ─────────────────────────── */
+    .early-access {
+      margin: 0 16px 40px;
+      background: var(--ocean);
+      border-radius: 12px;
+      padding: 32px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .early-access::after {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      background: var(--foam);
+      border-radius: 50%;
+      opacity: .08;
+    }
+    .early-tag {
+      display: inline-block;
+      background: var(--sun);
+      color: var(--dark);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 2px;
+      margin-bottom: 16px;
+    }
+    .early-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .early-body {
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(255,255,255,.7);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .perks {
+      list-style: none;
+      margin-bottom: 28px;
+    }
+    .perks li {
+      font-size: 13px;
+      color: rgba(255,255,255,.85);
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .perks li::before {
+      content: '✓';
+      color: var(--foam);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* ─── FOOTER CTA ─────────────────────────────── */
+    .footer-cta {
+      padding: 40px 24px 56px;
+      text-align: center;
+      background: var(--dark);
+    }
+    .footer-cta .eyebrow { display: block; margin-bottom: 10px; }
+    .footer-cta .hero-title { font-size: 48px; margin-bottom: 16px; }
+    .footer-cta .hero-sub  { font-size: 14px; margin-bottom: 28px; }
+    .cta-secondary {
+      display: block;
+      width: 100%;
+      background: transparent;
+      border: 2px solid var(--foam);
+      color: var(--foam);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      letter-spacing: .12em;
+      padding: 16px;
+      border-radius: 4px;
+      text-decoration: none;
+      margin-top: 12px;
+      transition: background .2s;
+    }
+    .cta-secondary:active { background: rgba(0,196,232,.1); }
+
+    .footer-logo {
+      margin-top: 40px;
+      font-size: 11px;
+      letter-spacing: .15em;
+      color: rgba(255,255,255,.25);
+      text-transform: uppercase;
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+  </style>
 </head>
-
 <body>
 
+<!-- ─── HERO ───────────────────────────────────── -->
 <section class="hero">
+  <div class="badge-ffck">FFCK × Eshop</div>
+  <div class="badge-urgence">⚡ Stock limité</div>
 
-  <div class="badge">ACCÈS ANTICIPÉ</div>
-
-  <h1>SQUALY FFCK</h1>
-
-  <p>Le bateau d’initiation nouvelle génération.<br>
-  Stable, fun, prêt pour tous les clubs.</p>
-
-  <!-- 🔽 Remplace le nom du fichier par ton image -->
-  <img src="ChatGPT Image 5 févr. 2026, 16_09_51.png" alt="Bateau Squaly FFCK" class="boat-img">
-
-  <a href="#" class="cta">Réserver maintenant</a>
-
-  <div class="urgency">⚠️ Stock limité — premiers arrivés, premiers servis</div>
-
-</section>
-
-<section class="section">
-
-  <h2>Pourquoi choisir le Squaly ?</h2>
-
-  <div class="features">
-
-    <div class="card">
-      🛶 Ultra stable — idéal débutants & écoles de pagaie
-    </div>
-
-    <div class="card">
-      💪 Robuste — conçu pour une utilisation intensive
-    </div>
-
-    <div class="card">
-      ⚡ Fun — parfait pour découvrir le kayak rapidement
-    </div>
-
+  <div class="waves">
+    <div class="wave wave1"></div>
+    <div class="wave wave2"></div>
+    <div class="wave wave3"></div>
   </div>
 
+  <div class="boat-wrap">
+    <!-- Fallback SVG si pas d'image disponible -->
+    <svg viewBox="0 0 500 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Corps du kayak -->
+      <ellipse cx="250" cy="140" rx="220" ry="55" fill="#00C4E8"/>
+      <ellipse cx="250" cy="128" rx="215" ry="48" fill="#0076A8"/>
+      <ellipse cx="250" cy="118" rx="200" ry="40" fill="#00C4E8"/>
+      <!-- Cockpit -->
+      <ellipse cx="250" cy="110" rx="65" ry="22" fill="#003D5C"/>
+      <ellipse cx="250" cy="106" rx="55" ry="17" fill="#001A26"/>
+      <!-- Reflet -->
+      <path d="M100 115 Q250 95 400 115" stroke="white" stroke-width="3" stroke-linecap="round" opacity=".3"/>
+      <!-- Logo SQUALY stylisé -->
+      <text x="250" y="170" text-anchor="middle" font-family="Arial Black" font-size="14" fill="white" opacity=".6">SQUALY</text>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <span class="eyebrow">Accès anticipé exclusif</span>
+    <h1 class="hero-title">
+      SQUALY
+      <span>par FFCK</span>
+    </h1>
+    <p class="hero-sub">
+      Le kayak d'initiation pensé pour les clubs, les familles et l'aventure. Réservé en avant-première.
+    </p>
+
+    <!-- Barre de stock -->
+    <div class="stock-bar">
+      <div class="stock-bar-top">
+        <span class="stock-label">Unités disponibles</span>
+        <span class="stock-count">28 / 100</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill"></div>
+      </div>
+      <p class="stock-note">72 unités déjà réservées cette semaine</p>
+    </div>
+
+    <a class="cta-primary" href="https://eshop.ffck.org" target="_blank" rel="noopener">
+      🚀 &nbsp;Je réserve mon Squaly
+    </a>
+    <p class="cta-note">Accès anticipé · Livraison prioritaire · Sans engagement</p>
+  </div>
 </section>
 
-<footer>
-FFCK — Offre exclusive clubs & structures
+<!-- ─── FEATURES ───────────────────────────────── -->
+<section class="section">
+  <p class="section-label reveal">Pourquoi le Squaly ?</p>
+  <h2 class="section-title reveal">Conçu pour prendre l'eau dès le premier jour.</h2>
+
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <span class="feat-icon">🌊</span>
+      <h3 class="feat-title">Initiation ultra-intuitive</h3>
+      <p class="feat-body">Profil de coque stable et réactif, parfait pour les débutants dès 8 ans. Retrouve la sensation de liberté sans complexité.</p>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feat-icon">🏅</span>
+      <h3 class="feat-title">Label FFCK</h3>
+      <p class="feat-body">Développé et homologué par la Fédération Française de Canoë-Kayak.</p>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feat-icon">🎒</span>
+      <h3 class="feat-title">Transport facile</h3>
+      <p class="feat-body">Léger et compact, il se charge seul sur le toit de voiture.</p>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feat-icon">🔵</span>
+      <h3 class="feat-title">Eau douce & mer</h3>
+      <p class="feat-body">Polyvalent : rivières calmes, lacs et côtes protégées.</p>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feat-icon">💪</span>
+      <h3 class="feat-title">Robuste & durable</h3>
+      <p class="feat-body">Matériaux résistants aux chocs et aux UV pour des années de pratique.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ACCÈS ANTICIPÉ ─────────────────────────── -->
+<div class="early-access reveal">
+  <span class="early-tag">⚡ Accès anticipé</span>
+  <h2 class="early-title">Sois parmi les premiers sur l'eau.</h2>
+  <p class="early-body">
+    Les personnes qui réservent maintenant bénéficient de conditions exclusives introuvables après le lancement officiel.
+  </p>
+  <ul class="perks">
+    <li>Livraison prioritaire avant le grand public</li>
+    <li>Prix de lancement garanti (tarif bloqué)</li>
+    <li>Accès au club d'utilisateurs FFCK early adopters</li>
+    <li>Ressources pédagogiques offertes (valeur 49 €)</li>
+    <li>Support dédié par les équipes FFCK</li>
+  </ul>
+  <a class="cta-primary" href="https://eshop.ffck.org" target="_blank" rel="noopener">
+    Réserver mon accès anticipé →
+  </a>
+</div>
+
+<!-- ─── FOOTER CTA ─────────────────────────────── -->
+<footer class="footer-cta">
+  <span class="eyebrow">Stock limité · Offre à durée déterminée</span>
+  <h2 class="hero-title">SOIS PRÊT <span>avant les autres.</span></h2>
+  <p class="hero-sub">Ne laisse pas ton unité être prise. Les inscriptions en accès anticipé ferment dès que le seuil est atteint.</p>
+
+  <a class="cta-primary" href="https://eshop.ffck.org" target="_blank" rel="noopener">
+    🚀 &nbsp;Réserver maintenant sur l'Eshop FFCK
+  </a>
+  <a class="cta-secondary" href="https://eshop.ffck.org" target="_blank" rel="noopener">
+    En savoir plus sur le Squaly
+  </a>
+
+  <p class="footer-logo">Fédération Française de Canoë-Kayak &nbsp;·&nbsp; eshop.ffck.org</p>
 </footer>
 
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Compteur de stock animé (effet tension)
+  let count = 28;
+  setTimeout(() => {
+    const el = document.querySelector('.stock-count');
+    const interval = setInterval(() => {
+      count = Math.max(22, count - 1);
+      el.textContent = `${count} / 100`;
+      if (count <= 22) clearInterval(interval);
+    }, 8000);
+  }, 5000);
+</script>
 </body>
 </html>
