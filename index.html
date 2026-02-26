@@ -104,7 +104,7 @@
       position: absolute;
       inset: 0;
       background:
-        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1600&q=80')
+        url('https://media.larepubliquedespyrenees.fr/5783222/1000x625/pp-613901dfa43f5efe676a6ae2-ph0.jpg?v=1631435112')
         center / cover no-repeat;
       transform: scale(1.05);
       animation: bgZoom 20s ease-in-out infinite alternate;
@@ -1211,7 +1211,7 @@
         <span class="price-note">Stage 3 jours — tout inclus — paiement sécurisé</span>
       </div>
 
-      <a href="/cdn-cgi/l/email-protection#87e4e8e9f3e6e4f3c7f4ebe6ebe8eaf7f5e8a9e1f5" class="btn-primary" style="font-size:1.05rem;padding:1.2rem 3rem;margin-bottom:1rem;">
+      <a href="mailto:contact@slalompro.fr" class="btn-primary" style="font-size:1.05rem;padding:1.2rem 3rem;margin-bottom:1rem;">
         🏄 Réserver mon accès anticipé
       </a>
 
@@ -1253,7 +1253,7 @@
             <li><a href="#">Mentions légales</a></li>
             <li><a href="#">CGV</a></li>
             <li><a href="#">Politique de confidentialité</a></li>
-            <li><a href="/cdn-cgi/l/email-protection#6d0e0203190c0e192d1e010c0102001d1f02430b1f">Contact</a></li>
+            <li><a href="mailto:contact@slalompro.fr">Contact</a></li>
           </ul>
         </div>
 
@@ -1274,7 +1274,7 @@
   <!-- ========================
        SCRIPTS
   ========================= -->
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script>
     // === Countdown Timer ===
     (function () {
       // Set deadline to 2 days 14h 37min from now
@@ -1331,4 +1331,14 @@
     // === Smooth scroll for anchor links ===
     document.querySelectorAll('a[href^="#"]').forEach((link) => {
       link.addEventListener('click', (e) => {
-        const target = document.querySelector(link.getAttribut
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
