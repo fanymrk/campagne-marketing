@@ -3,582 +3,1015 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Squaly — Accès Anticipé | FFCK</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,500;0,700;1,300&display=swap" rel="stylesheet">
+  <title>AlpineElite — Séjours Ski Exclusifs</title>
+
+  <!-- Google Fonts : Playfair Display + DM Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
+
   <style>
+    /* =========================================
+       VARIABLES & RESET
+    ========================================= */
     :root {
-      --ocean: #003D5C;
-      --wave: #0076A8;
-      --foam: #00C4E8;
-      --sun:  #FFB703;
-      --sand: #F5EFE6;
-      --dark: #001A26;
+      --white:        #F5F7FA;
+      --glacier:      #5BAFD6;
+      --glacier-dark: #2A7FAF;
+      --glacier-light:#A8D8EF;
+      --black:        #0D0F14;
+      --dark:         #141820;
+      --mid:          #1E2433;
+      --accent:       #E8562A;    /* orange-rouge */
+      --accent-light: #FF7A50;
+      --text-muted:   #8A95A8;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'DM Sans', sans-serif;
+      --radius:       12px;
+      --transition:   0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--sand);
-      color: var(--dark);
+      font-family: var(--font-body);
+      background: var(--black);
+      color: var(--white);
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* ─── HERO ───────────────────────────────────── */
-    .hero {
-      position: relative;
-      min-height: 100svh;
-      background: var(--ocean);
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 0 0 40px;
-      overflow: hidden;
-    }
+    img { display: block; max-width: 100%; }
+    a   { text-decoration: none; color: inherit; }
 
-    /* Animated water background */
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 160% 80% at 50% 110%, var(--foam) 0%, transparent 55%),
-        radial-gradient(ellipse 200% 60% at 80% 100%, var(--wave) 0%, transparent 50%),
-        linear-gradient(175deg, var(--dark) 0%, var(--ocean) 50%, var(--wave) 100%);
-      z-index: 0;
-    }
-
-    /* Wave shapes */
-    .waves {
-      position: absolute;
-      bottom: 0; left: -5%; right: -5%;
-      height: 55%;
-      z-index: 1;
-    }
-    .wave {
-      position: absolute;
-      width: 110%;
-      left: -5%;
-      border-radius: 50%;
-    }
-    .wave1 {
-      bottom: -20px; height: 200px;
-      background: rgba(0,196,232,.15);
-      animation: swell 6s ease-in-out infinite;
-    }
-    .wave2 {
-      bottom: -30px; height: 160px;
-      background: rgba(0,118,168,.25);
-      animation: swell 8s ease-in-out infinite reverse;
-    }
-    .wave3 {
-      bottom: -50px; height: 120px;
-      background: rgba(0,61,92,.5);
-      animation: swell 5s ease-in-out infinite 1s;
-    }
-    @keyframes swell {
-      0%,100% { transform: scaleX(1) translateY(0); }
-      50%      { transform: scaleX(1.04) translateY(-12px); }
-    }
-
-    /* Badge urgence */
-    .badge-urgence {
-      position: absolute;
-      top: 24px; right: 20px;
-      background: var(--sun);
-      color: var(--dark);
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 13px;
-      letter-spacing: .08em;
-      padding: 6px 14px;
-      border-radius: 2px;
-      z-index: 10;
-      animation: pulse-badge 2s ease-in-out infinite;
-    }
-    @keyframes pulse-badge {
-      0%,100% { transform: scale(1); }
-      50%      { transform: scale(1.05); }
-    }
-
-    /* Badge FFCK */
-    .badge-ffck {
-      position: absolute;
-      top: 20px; left: 20px;
-      background: rgba(255,255,255,.1);
-      border: 1px solid rgba(255,255,255,.25);
-      color: #fff;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      padding: 6px 12px;
-      border-radius: 2px;
-      z-index: 10;
-      backdrop-filter: blur(6px);
-    }
-
-    /* Boat image */
-    .boat-wrap {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -58%);
-      width: 115%;
-      max-width: 480px;
-      z-index: 5;
-      animation: float 4s ease-in-out infinite;
-      filter: drop-shadow(0 30px 60px rgba(0,0,0,.5));
-    }
-    .boat-wrap img { width: 100%; height: auto; }
-
-    @keyframes float {
-      0%,100% { transform: translate(-50%, -58%) rotate(-1deg); }
-      50%      { transform: translate(-50%, -62%) rotate(1deg); }
-    }
-
-    /* Hero text */
-    .hero-content {
-      position: relative;
-      z-index: 10;
-      padding: 0 24px;
-      text-align: center;
-    }
-
-    .eyebrow {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: .25em;
-      text-transform: uppercase;
-      color: var(--foam);
-      margin-bottom: 8px;
-    }
-
-    .hero-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(72px, 20vw, 96px);
-      line-height: .9;
-      color: #fff;
-      letter-spacing: .02em;
-      margin-bottom: 4px;
-    }
-    .hero-title span {
-      color: var(--foam);
-      display: block;
-    }
-
-    .hero-sub {
-      font-size: 15px;
-      font-weight: 300;
-      color: rgba(255,255,255,.75);
-      line-height: 1.5;
-      margin-bottom: 28px;
-      max-width: 320px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    /* Stock bar */
-    .stock-bar {
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.15);
-      border-radius: 8px;
-      padding: 12px 16px;
-      margin-bottom: 20px;
-      backdrop-filter: blur(8px);
-    }
-    .stock-bar-top {
+    /* =========================================
+       BARRE DE NAVIGATION
+    ========================================= */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1rem 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
+      background: linear-gradient(to bottom, rgba(13,15,20,0.85) 0%, transparent 100%);
+      backdrop-filter: blur(4px);
     }
-    .stock-label {
-      font-size: 11px;
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--white);
+    }
+
+    .nav-logo span { color: var(--glacier); }
+
+    .nav-cta {
+      font-size: 0.78rem;
       font-weight: 700;
-      letter-spacing: .12em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: rgba(255,255,255,.6);
+      padding: 0.55rem 1.2rem;
+      border: 1.5px solid var(--glacier);
+      border-radius: 50px;
+      color: var(--glacier);
+      transition: background var(--transition), color var(--transition);
     }
-    .stock-count {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 18px;
-      color: var(--sun);
-      letter-spacing: .05em;
+
+    .nav-cta:hover {
+      background: var(--glacier);
+      color: var(--black);
     }
-    .progress-track {
-      height: 6px;
-      background: rgba(255,255,255,.15);
-      border-radius: 3px;
+
+    /* =========================================
+       HERO SECTION
+    ========================================= */
+    #hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 1.5rem 3.5rem;
       overflow: hidden;
     }
-    .progress-fill {
-      height: 100%;
-      width: 72%;
-      background: linear-gradient(90deg, var(--foam), var(--sun));
-      border-radius: 3px;
-      animation: fill-anim .8s ease-out forwards;
-      transform-origin: left;
-    }
-    @keyframes fill-anim {
-      from { width: 0; }
-      to   { width: 72%; }
-    }
-    .stock-note {
-      font-size: 10px;
-      color: rgba(255,255,255,.45);
-      margin-top: 6px;
-      text-align: right;
+
+    /* Image de fond via unsplash (libre de droit) */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1200&auto=format&fit=crop&q=80');
+      background-size: cover;
+      background-position: center 30%;
+      transform: scale(1.05);
+      animation: subtle-zoom 18s ease-in-out infinite alternate;
     }
 
-    /* CTA */
-    .cta-primary {
-      display: block;
-      width: 100%;
-      background: var(--sun);
-      color: var(--dark);
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 22px;
-      letter-spacing: .12em;
-      text-align: center;
-      padding: 18px 24px;
-      border-radius: 4px;
-      text-decoration: none;
+    @keyframes subtle-zoom {
+      from { transform: scale(1.05); }
+      to   { transform: scale(1.12); }
+    }
+
+    /* Overlay dégradé pour lisibilité */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(13,15,20,0.25) 0%,
+          rgba(13,15,20,0.15) 30%,
+          rgba(13,15,20,0.75) 70%,
+          rgba(13,15,20,0.95) 100%
+        );
+    }
+
+    /* Texture grain subtile */
+    .hero-grain {
+      position: absolute;
+      inset: 0;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    /* Contenu hero */
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 600px;
+    }
+
+    /* Badge "Places limitées" */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: rgba(232, 86, 42, 0.15);
+      border: 1px solid rgba(232, 86, 42, 0.5);
+      border-radius: 50px;
+      padding: 0.4rem 1rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-light);
+      margin-bottom: 1.25rem;
+      animation: pulse-border 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-border {
+      0%, 100% { border-color: rgba(232, 86, 42, 0.5); }
+      50%       { border-color: rgba(232, 86, 42, 1); }
+    }
+
+    .badge-dot {
+      width: 7px; height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: blink 1.4s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.2; }
+    }
+
+    /* Titre principal */
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.6rem, 9vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1.0;
+      letter-spacing: -0.025em;
+      margin-bottom: 1.1rem;
+      text-shadow: 0 4px 32px rgba(0,0,0,0.4);
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--glacier-light);
+    }
+
+    .hero-subtitle {
+      font-size: clamp(0.95rem, 3vw, 1.15rem);
+      font-weight: 300;
+      color: rgba(245,247,250,0.8);
+      line-height: 1.65;
+      max-width: 440px;
+      margin-bottom: 2rem;
+    }
+
+    /* Groupe bouton + micro-texte */
+    .hero-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      align-items: flex-start;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: linear-gradient(135deg, var(--glacier-dark) 0%, var(--glacier) 100%);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      padding: 1rem 2rem;
+      border-radius: 50px;
       border: none;
       cursor: pointer;
-      transition: transform .15s, box-shadow .15s;
-      box-shadow: 0 8px 32px rgba(255,183,3,.4);
-    }
-    .cta-primary:active {
-      transform: scale(.97);
-      box-shadow: 0 4px 16px rgba(255,183,3,.3);
-    }
-    .cta-note {
-      font-size: 11px;
-      color: rgba(255,255,255,.4);
-      margin-top: 10px;
-      text-align: center;
+      box-shadow: 0 8px 32px rgba(91,175,214,0.35);
+      transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
     }
 
-    /* ─── FEATURES ───────────────────────────────── */
-    .section {
-      padding: 56px 24px 40px;
+    .btn-primary:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 14px 40px rgba(91,175,214,0.5);
+      background: linear-gradient(135deg, var(--glacier) 0%, var(--glacier-light) 100%);
+      color: var(--black);
     }
-    .section-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: .2em;
+
+    .btn-primary svg {
+      transition: transform var(--transition);
+    }
+
+    .btn-primary:hover svg { transform: translateX(3px); }
+
+    .hero-note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .hero-note::before {
+      content: '⎯';
+      color: var(--accent);
+    }
+
+    /* Indicateur de scroll */
+    .scroll-hint {
+      position: absolute;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      opacity: 0.5;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: var(--wave);
-      margin-bottom: 10px;
-    }
-    .section-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 38px;
-      line-height: 1;
-      color: var(--ocean);
-      margin-bottom: 20px;
+      color: var(--white);
     }
 
-    .features-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 24px;
+    .scroll-line {
+      width: 1.5px;
+      height: 36px;
+      background: linear-gradient(to bottom, var(--glacier), transparent);
+      animation: scroll-anim 1.8s ease-in-out infinite;
     }
-    .feature-card {
-      background: #fff;
-      border-radius: 8px;
-      padding: 20px 16px;
-      border: 1px solid rgba(0,61,92,.08);
-    }
-    .feature-card:first-child {
-      grid-column: 1 / -1;
-      background: var(--ocean);
-      color: #fff;
-    }
-    .feat-icon {
-      font-size: 28px;
-      margin-bottom: 10px;
-      display: block;
-    }
-    .feat-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 20px;
-      letter-spacing: .04em;
-      color: var(--ocean);
-      margin-bottom: 4px;
-    }
-    .feature-card:first-child .feat-title { color: var(--foam); }
-    .feat-body {
-      font-size: 13px;
-      font-weight: 300;
-      line-height: 1.5;
-      color: rgba(0,26,38,.65);
-    }
-    .feature-card:first-child .feat-body { color: rgba(255,255,255,.7); }
 
-    /* ─── ACCÈS ANTICIPÉ ─────────────────────────── */
-    .early-access {
-      margin: 0 16px 40px;
-      background: var(--ocean);
-      border-radius: 12px;
-      padding: 32px 24px;
+    @keyframes scroll-anim {
+      0%   { opacity: 1; transform: scaleY(1); transform-origin: top; }
+      50%  { opacity: 0.3; }
+      100% { opacity: 1; transform: scaleY(1); }
+    }
+
+    /* =========================================
+       SECTION AVANTAGES
+    ========================================= */
+    #avantages {
+      padding: 5rem 1.5rem;
+      background: var(--dark);
       position: relative;
       overflow: hidden;
     }
-    .early-access::after {
+
+    /* Ligne décorative bleue */
+    #avantages::before {
       content: '';
       position: absolute;
-      top: -40px; right: -40px;
-      width: 160px; height: 160px;
-      background: var(--foam);
-      border-radius: 50%;
-      opacity: .08;
-    }
-    .early-tag {
-      display: inline-block;
-      background: var(--sun);
-      color: var(--dark);
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      padding: 4px 10px;
-      border-radius: 2px;
-      margin-bottom: 16px;
-    }
-    .early-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 32px;
-      color: #fff;
-      line-height: 1;
-      margin-bottom: 12px;
-    }
-    .early-body {
-      font-size: 14px;
-      font-weight: 300;
-      color: rgba(255,255,255,.7);
-      line-height: 1.6;
-      margin-bottom: 24px;
-    }
-    .perks {
-      list-style: none;
-      margin-bottom: 28px;
-    }
-    .perks li {
-      font-size: 13px;
-      color: rgba(255,255,255,.85);
-      padding: 6px 0;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .perks li::before {
-      content: '✓';
-      color: var(--foam);
-      font-weight: 700;
-      flex-shrink: 0;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--glacier), transparent);
     }
 
-    /* ─── FOOTER CTA ─────────────────────────────── */
-    .footer-cta {
-      padding: 40px 24px 56px;
-      text-align: center;
-      background: var(--dark);
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--glacier);
+      margin-bottom: 0.8rem;
     }
-    .footer-cta .eyebrow { display: block; margin-bottom: 10px; }
-    .footer-cta .hero-title { font-size: 48px; margin-bottom: 16px; }
-    .footer-cta .hero-sub  { font-size: 14px; margin-bottom: 28px; }
-    .cta-secondary {
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.6rem;
+    }
+
+    .section-sub {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 480px;
+      margin-bottom: 3rem;
+    }
+
+    /* Grille de cartes avantages */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.2rem;
+    }
+
+    @media (min-width: 600px) {
+      .cards-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (min-width: 900px) {
+      .cards-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .card {
+      background: var(--mid);
+      border: 1px solid rgba(91,175,214,0.08);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--glacier-dark), var(--glacier));
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(91,175,214,0.25);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+    }
+
+    .card:hover::before { opacity: 1; }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
       display: block;
-      width: 100%;
-      background: transparent;
-      border: 2px solid var(--foam);
-      color: var(--foam);
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 18px;
-      letter-spacing: .12em;
-      padding: 16px;
-      border-radius: 4px;
-      text-decoration: none;
-      margin-top: 12px;
-      transition: background .2s;
     }
-    .cta-secondary:active { background: rgba(0,196,232,.1); }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      letter-spacing: -0.01em;
+    }
+
+    .card-text {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* =========================================
+       SECTION URGENCE / STOCK LIMITÉ
+    ========================================= */
+    #urgence {
+      padding: 4.5rem 1.5rem;
+      background: var(--black);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Fond ambiance bleutée */
+    #urgence::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(42,127,175,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .urgence-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .urgence-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(232, 86, 42, 0.12);
+      border: 1px solid rgba(232, 86, 42, 0.4);
+      border-radius: 50px;
+      padding: 0.4rem 1rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-light);
+      margin-bottom: 1.5rem;
+    }
+
+    .urgence-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.9rem, 7vw, 3.2rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .urgence-title span { color: var(--accent-light); }
+
+    .urgence-sub {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Barre de progression "stock" */
+    .stock-bar-wrapper {
+      margin-bottom: 2rem;
+    }
+
+    .stock-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .stock-labels strong {
+      color: var(--accent-light);
+      font-weight: 700;
+    }
+
+    .stock-track {
+      height: 6px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 50px;
+      overflow: hidden;
+    }
+
+    .stock-fill {
+      height: 100%;
+      width: 78%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      border-radius: 50px;
+      animation: stock-load 1.6s ease-out forwards;
+      transform-origin: left;
+    }
+
+    @keyframes stock-load {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+
+    /* Compteur de places restantes */
+    .spots-count {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .spot-number {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 10vw, 5rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    .spot-label {
+      text-align: left;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .spot-label strong {
+      display: block;
+      color: var(--accent-light);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+    }
+
+    .urgence-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 32px rgba(232,86,42,0.35);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .urgence-cta:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 14px 40px rgba(232,86,42,0.55);
+    }
+
+    .urgence-note {
+      margin-top: 1.1rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* =========================================
+       SECTION TÉMOIGNAGES / SOCIAL PROOF (mini)
+    ========================================= */
+    #proof {
+      padding: 4rem 1.5rem;
+      background: var(--dark);
+      border-top: 1px solid rgba(91,175,214,0.07);
+    }
+
+    .proof-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .proof-stars {
+      font-size: 1.3rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.8rem;
+    }
+
+    .proof-quote {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 3.5vw, 1.5rem);
+      font-style: italic;
+      line-height: 1.55;
+      color: rgba(245,247,250,0.85);
+      max-width: 600px;
+      margin: 0 auto 1.2rem;
+    }
+
+    .proof-author {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .proof-author strong {
+      color: var(--glacier);
+    }
+
+    /* Logos de stations (placeholders) */
+    .proof-stations {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1.5rem 2.5rem;
+      margin-top: 3rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .station-pill {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 50px;
+      padding: 0.45rem 1.1rem;
+      transition: border-color var(--transition), color var(--transition);
+    }
+
+    .station-pill:hover {
+      border-color: var(--glacier);
+      color: var(--glacier-light);
+    }
+
+    /* =========================================
+       FOOTER
+    ========================================= */
+    footer {
+      background: var(--black);
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding: 2.5rem 1.5rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      align-items: center;
+      text-align: center;
+    }
+
+    @media (min-width: 700px) {
+      .footer-inner {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+      }
+    }
 
     .footer-logo {
-      margin-top: 40px;
-      font-size: 11px;
-      letter-spacing: .15em;
-      color: rgba(255,255,255,.25);
-      text-transform: uppercase;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 900;
     }
 
-    /* Scroll reveal */
-    .reveal {
+    .footer-logo span { color: var(--glacier); }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer-links a {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      transition: color var(--transition);
+    }
+
+    .footer-links a:hover { color: var(--white); }
+
+    .footer-copy {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* =========================================
+       UTILITAIRES / RESPONSIVE GLOBAL
+    ========================================= */
+    .max-w { max-width: 1100px; margin: 0 auto; }
+
+    /* Animations d'entrée au scroll */
+    .fade-up {
       opacity: 0;
       transform: translateY(24px);
-      transition: opacity .6s ease, transform .6s ease;
+      transition: opacity 0.7s ease, transform 0.7s ease;
     }
-    .reveal.visible {
+
+    .fade-up.visible {
       opacity: 1;
-      transform: none;
+      transform: translateY(0);
     }
+
+    /* Délais d'animation en cascade */
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
+    .delay-4 { transition-delay: 0.4s; }
+    .delay-5 { transition-delay: 0.5s; }
+
   </style>
 </head>
 <body>
 
-<!-- ─── HERO ───────────────────────────────────── -->
-<section class="hero">
-  <div class="badge-ffck">FFCK × Eshop</div>
-  <div class="badge-urgence">⚡ Stock limité</div>
+  <!-- =============================
+       NAVIGATION
+  ============================= -->
+  <nav>
+    <div class="nav-logo">Alpine<span>Elite</span></div>
+    <a href="#urgence" class="nav-cta">Réserver</a>
+  </nav>
 
-  <div class="waves">
-    <div class="wave wave1"></div>
-    <div class="wave wave2"></div>
-    <div class="wave wave3"></div>
-  </div>
+  <!-- =============================
+       HERO SECTION
+  ============================= -->
+  <section id="hero">
 
-  <div class="boat-wrap">
-    <!-- Fallback SVG si pas d'image disponible -->
-    <svg viewBox="0 0 500 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Corps du kayak -->
-      <ellipse cx="250" cy="140" rx="220" ry="55" fill="#00C4E8"/>
-      <ellipse cx="250" cy="128" rx="215" ry="48" fill="#0076A8"/>
-      <ellipse cx="250" cy="118" rx="200" ry="40" fill="#00C4E8"/>
-      <!-- Cockpit -->
-      <ellipse cx="250" cy="110" rx="65" ry="22" fill="#003D5C"/>
-      <ellipse cx="250" cy="106" rx="55" ry="17" fill="#001A26"/>
-      <!-- Reflet -->
-      <path d="M100 115 Q250 95 400 115" stroke="white" stroke-width="3" stroke-linecap="round" opacity=".3"/>
-      <!-- Logo SQUALY stylisé -->
-      <text x="250" y="170" text-anchor="middle" font-family="Arial Black" font-size="14" fill="white" opacity=".6">SQUALY</text>
-    </svg>
-  </div>
+    <!-- Fond montagne enneigée (Unsplash) -->
+    <div class="hero-bg" role="img" aria-label="Montagne enneigée sous ciel bleu"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-grain"></div>
 
-  <div class="hero-content">
-    <span class="eyebrow">Accès anticipé exclusif</span>
-    <h1 class="hero-title">
-      SQUALY
-      <span>par FFCK</span>
-    </h1>
-    <p class="hero-sub">
-      Le kayak d'initiation pensé pour les clubs, les familles et l'aventure. Réservé en avant-première.
-    </p>
+    <!-- Contenu principal du hero -->
+    <div class="hero-content">
 
-    <!-- Barre de stock -->
-    <div class="stock-bar">
-      <div class="stock-bar-top">
-        <span class="stock-label">Unités disponibles</span>
-        <span class="stock-count">28 / 100</span>
+      <!-- Badge urgence -->
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Places limitées — Accès anticipé ouvert
       </div>
-      <div class="progress-track">
-        <div class="progress-fill"></div>
+
+      <!-- Titre accrocheur -->
+      <h1 class="hero-title">
+        Vivez la montagne<br /><em>autrement.</em>
+      </h1>
+
+      <!-- Sous-titre -->
+      <p class="hero-subtitle">
+        Des séjours ski d'exception, des stations exclusives, 
+        une expérience conçue pour ceux qui refusent l'ordinaire. 
+        Avant tout le monde.
+      </p>
+
+      <!-- CTA -->
+      <div class="hero-actions">
+        <a href="#urgence" class="btn-primary">
+          Réserver mon accès anticipé
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+        <span class="hero-note">Sans engagement &mdash; 100% remboursable avant le 1er novembre</span>
       </div>
-      <p class="stock-note">72 unités déjà réservées cette semaine</p>
+
     </div>
 
-    <a class="cta-primary" href="https://eshop.ffck.org" target="_blank" rel="noopener">
-      🚀 &nbsp;Je réserve mon Squaly
-    </a>
-    <p class="cta-note">Accès anticipé · Livraison prioritaire · Sans engagement</p>
-  </div>
-</section>
-
-<!-- ─── FEATURES ───────────────────────────────── -->
-<section class="section">
-  <p class="section-label reveal">Pourquoi le Squaly ?</p>
-  <h2 class="section-title reveal">Conçu pour prendre l'eau dès le premier jour.</h2>
-
-  <div class="features-grid">
-    <div class="feature-card reveal">
-      <span class="feat-icon">🌊</span>
-      <h3 class="feat-title">Initiation ultra-intuitive</h3>
-      <p class="feat-body">Profil de coque stable et réactif, parfait pour les débutants dès 8 ans. Retrouve la sensation de liberté sans complexité.</p>
+    <!-- Scroll hint -->
+    <div class="scroll-hint" aria-hidden="true">
+      <div class="scroll-line"></div>
+      <span>Découvrir</span>
     </div>
-    <div class="feature-card reveal">
-      <span class="feat-icon">🏅</span>
-      <h3 class="feat-title">Label FFCK</h3>
-      <p class="feat-body">Développé et homologué par la Fédération Française de Canoë-Kayak.</p>
+
+  </section>
+
+  <!-- =============================
+       SECTION AVANTAGES
+  ============================= -->
+  <section id="avantages">
+    <div class="max-w">
+
+      <p class="section-label fade-up">Pourquoi nous choisir</p>
+      <h2 class="section-title fade-up delay-1">L'excellence à chaque virage.</h2>
+      <p class="section-sub fade-up delay-2">
+        AlpineElite sélectionne pour vous les meilleures destinations, 
+        les hébergements les plus exclusifs et les expériences les plus uniques en montagne.
+      </p>
+
+      <!-- Cartes avantages -->
+      <div class="cards-grid">
+
+        <div class="card fade-up delay-1">
+          <span class="card-icon">🎫</span>
+          <h3 class="card-title">Accès anticipé aux réservations</h3>
+          <p class="card-text">
+            Réservez avant l'ouverture officielle au public. Choisissez vos dates, 
+            vos pistes et vos hébergements en priorité absolue.
+          </p>
+        </div>
+
+        <div class="card fade-up delay-2">
+          <span class="card-icon">⛰️</span>
+          <h3 class="card-title">Stations exclusives & fermées</h3>
+          <p class="card-text">
+            Accédez à des domaines skiables privés, réservés aux membres — 
+            introuvables dans les agences classiques.
+          </p>
+        </div>
+
+        <div class="card fade-up delay-3">
+          <span class="card-icon">🎿</span>
+          <h3 class="card-title">Expériences uniques ski & montagne</h3>
+          <p class="card-text">
+            Heli-ski au lever du soleil, stages avec des champions olympiques, 
+            soirées privées en refuge d'altitude : chaque séjour est une aventure.
+          </p>
+        </div>
+
+        <div class="card fade-up delay-2">
+          <span class="card-icon">🏔️</span>
+          <h3 class="card-title">Conciergerie dédiée 24h/24</h3>
+          <p class="card-text">
+            Votre conseiller personnel gère chaque détail — transferts, équipements, 
+            restaurants d'altitude, activités hors-piste.
+          </p>
+        </div>
+
+        <div class="card fade-up delay-3">
+          <span class="card-icon">❄️</span>
+          <h3 class="card-title">Neige garantie, météo optimisée</h3>
+          <p class="card-text">
+            Nos experts analysent les données nivologiques en temps réel pour vous 
+            garantir les meilleures conditions de la saison.
+          </p>
+        </div>
+
+        <div class="card fade-up delay-4">
+          <span class="card-icon">🛡️</span>
+          <h3 class="card-title">Annulation flexible & assurance incluse</h3>
+          <p class="card-text">
+            Réservez sereinement. Remboursement intégral jusqu'à 30 jours avant 
+            le départ, assurance rapatriement premium incluse.
+          </p>
+        </div>
+
+      </div>
+
     </div>
-    <div class="feature-card reveal">
-      <span class="feat-icon">🎒</span>
-      <h3 class="feat-title">Transport facile</h3>
-      <p class="feat-body">Léger et compact, il se charge seul sur le toit de voiture.</p>
+  </section>
+
+  <!-- =============================
+       SECTION PREUVE SOCIALE
+  ============================= -->
+  <section id="proof">
+    <div class="proof-inner">
+
+      <p class="proof-stars fade-up">⭐⭐⭐⭐⭐</p>
+
+      <blockquote class="proof-quote fade-up delay-1">
+        "Une semaine à Val Thorens avec AlpineElite : 
+        des pistes vierges, un chalet de rêve et un service 
+        d'une discrétion parfaite. Je ne skirais plus autrement."
+      </blockquote>
+
+      <p class="proof-author fade-up delay-2">
+        <strong>Mathieu R.</strong> — Membre depuis 2023
+      </p>
+
+      <!-- Stations partenaires -->
+      <div class="proof-stations fade-up delay-3">
+        <span class="station-pill">Val Thorens</span>
+        <span class="station-pill">Chamonix</span>
+        <span class="station-pill">Courchevel</span>
+        <span class="station-pill">Verbier</span>
+        <span class="station-pill">Megève</span>
+        <span class="station-pill">Zermatt</span>
+      </div>
+
     </div>
-    <div class="feature-card reveal">
-      <span class="feat-icon">🔵</span>
-      <h3 class="feat-title">Eau douce & mer</h3>
-      <p class="feat-body">Polyvalent : rivières calmes, lacs et côtes protégées.</p>
+  </section>
+
+  <!-- =============================
+       SECTION URGENCE / CTA FINAL
+  ============================= -->
+  <section id="urgence">
+    <div class="urgence-inner">
+
+      <!-- Tag urgence -->
+      <div class="urgence-tag fade-up">
+        <span class="badge-dot" style="background:var(--accent);animation:blink 1.4s ease-in-out infinite;"></span>
+        Stock limité — Premiers arrivés, premiers servis
+      </div>
+
+      <h2 class="urgence-title fade-up delay-1">
+        Il ne reste que <span>7 places</span><br />pour la saison 2024–25.
+      </h2>
+
+      <p class="urgence-sub fade-up delay-2">
+        Notre accès anticipé se ferme dès que le quota est atteint. 
+        Ne laissez pas quelqu'un d'autre prendre votre place sur les pistes.
+      </p>
+
+      <!-- Barre de stock -->
+      <div class="stock-bar-wrapper fade-up delay-2">
+        <div class="stock-labels">
+          <span>Disponibilité restante</span>
+          <strong>78% réservé</strong>
+        </div>
+        <div class="stock-track">
+          <div class="stock-fill"></div>
+        </div>
+      </div>
+
+      <!-- Compteur -->
+      <div class="spots-count fade-up delay-3">
+        <span class="spot-number" id="countdown-number">7</span>
+        <div class="spot-label">
+          <strong>Places restantes</strong>
+          sur 32 disponibles au total
+        </div>
+      </div>
+
+      <!-- CTA principal -->
+      <a href="#" class="urgence-cta fade-up delay-4">
+        Réserver mon accès anticipé maintenant
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+
+      <p class="urgence-note fade-up delay-5">
+        🔒 Paiement sécurisé &nbsp;·&nbsp; Annulation gratuite jusqu'au 1er novembre &nbsp;·&nbsp; Sans frais cachés
+      </p>
+
     </div>
-    <div class="feature-card reveal">
-      <span class="feat-icon">💪</span>
-      <h3 class="feat-title">Robuste & durable</h3>
-      <p class="feat-body">Matériaux résistants aux chocs et aux UV pour des années de pratique.</p>
+  </section>
+
+  <!-- =============================
+       FOOTER
+  ============================= -->
+  <footer>
+    <div class="footer-inner max-w">
+
+      <div class="footer-logo">Alpine<span>Elite</span></div>
+
+      <nav class="footer-links" aria-label="Liens footer">
+        <a href="#">Mentions légales</a>
+        <a href="#">Confidentialité</a>
+        <a href="#">CGV</a>
+        <a href="#">Contact</a>
+      </nav>
+
+      <p class="footer-copy">&copy; 2024 AlpineElite. Tous droits réservés.</p>
+
     </div>
-  </div>
-</section>
+  </footer>
 
-<!-- ─── ACCÈS ANTICIPÉ ─────────────────────────── -->
-<div class="early-access reveal">
-  <span class="early-tag">⚡ Accès anticipé</span>
-  <h2 class="early-title">Sois parmi les premiers sur l'eau.</h2>
-  <p class="early-body">
-    Les personnes qui réservent maintenant bénéficient de conditions exclusives introuvables après le lancement officiel.
-  </p>
-  <ul class="perks">
-    <li>Livraison prioritaire avant le grand public</li>
-    <li>Prix de lancement garanti (tarif bloqué)</li>
-    <li>Accès au club d'utilisateurs FFCK early adopters</li>
-    <li>Ressources pédagogiques offertes (valeur 49 €)</li>
-    <li>Support dédié par les équipes FFCK</li>
-  </ul>
-  <a class="cta-primary" href="https://eshop.ffck.org" target="_blank" rel="noopener">
-    Réserver mon accès anticipé →
-  </a>
-</div>
+  <!-- =============================
+       JAVASCRIPT
+  ============================= -->
+  <script>
+    /**
+     * Intersection Observer — animations au scroll
+     * Ajoute la classe .visible aux éléments .fade-up quand ils entrent dans la vue
+     */
+    const fadeEls = document.querySelectorAll('.fade-up');
 
-<!-- ─── FOOTER CTA ─────────────────────────────── -->
-<footer class="footer-cta">
-  <span class="eyebrow">Stock limité · Offre à durée déterminée</span>
-  <h2 class="hero-title">SOIS PRÊT <span>avant les autres.</span></h2>
-  <p class="hero-sub">Ne laisse pas ton unité être prise. Les inscriptions en accès anticipé ferment dès que le seuil est atteint.</p>
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target); // déclenche une seule fois
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
 
-  <a class="cta-primary" href="https://eshop.ffck.org" target="_blank" rel="noopener">
-    🚀 &nbsp;Réserver maintenant sur l'Eshop FFCK
-  </a>
-  <a class="cta-secondary" href="https://eshop.ffck.org" target="_blank" rel="noopener">
-    En savoir plus sur le Squaly
-  </a>
+    fadeEls.forEach(el => observer.observe(el));
 
-  <p class="footer-logo">Fédération Française de Canoë-Kayak &nbsp;·&nbsp; eshop.ffck.org</p>
-</footer>
+    /**
+     * Compteur animé : simule la diminution des places en temps réel
+     * Réduit aléatoirement de 1 place toutes les ~45–90 secondes pour créer l'urgence
+     */
+    const countEl = document.getElementById('countdown-number');
+    let spots = 7;
 
-<script>
-  // Scroll reveal
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
+    function decreaseSpot() {
+      if (spots > 1) {
+        // Décrément visible avec animation courte
+        countEl.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+        countEl.style.transform = 'scale(0.7)';
+        countEl.style.opacity = '0';
+        setTimeout(() => {
+          spots--;
+          countEl.textContent = spots;
+          countEl.style.transform = 'scale(1.15)';
+          countEl.style.opacity = '1';
+          setTimeout(() => {
+            countEl.style.transform = 'scale(1)';
+          }, 200);
+        }, 300);
+
+        // Planifier la prochaine réduction dans 45–90 secondes
+        const next = 45000 + Math.random() * 45000;
+        setTimeout(decreaseSpot, next);
       }
-    });
-  }, { threshold: 0.12 });
+    }
 
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    // Démarrer après 60 secondes (pas trop agressif)
+    setTimeout(decreaseSpot, 60000);
+  </script>
 
-  // Compteur de stock animé (effet tension)
-  let count = 28;
-  setTimeout(() => {
-    const el = document.querySelector('.stock-count');
-    const interval = setInterval(() => {
-      count = Math.max(22, count - 1);
-      el.textContent = `${count} / 100`;
-      if (count <= 22) clearInterval(interval);
-    }, 8000);
-  }, 5000);
-</script>
 </body>
 </html>
