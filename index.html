@@ -1,1344 +1,182 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SlalomPro — Stages Canoë-Kayak d'Élite</title>
-
-  <!-- Google Fonts: Bebas Neue (display) + DM Sans (body) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
-
-  <style>
-    /* ===========================
-       CSS CUSTOM PROPERTIES
-    =========================== */
-    :root {
-      --c-black:     #060b10;
-      --c-deep:      #0a1929;
-      --c-blue:      #0d47a1;
-      --c-teal:      #00b4d8;
-      --c-cyan:      #48cae4;
-      --c-white:     #f0f8ff;
-      --c-accent:    #00e5ff;
-      --c-danger:    #ff5252;
-      --c-gold:      #ffd166;
-
-      --font-display: 'Bebas Neue', cursive;
-      --font-body:    'DM Sans', sans-serif;
-
-      --radius-btn: 50px;
-      --shadow-glow: 0 0 30px rgba(0, 229, 255, 0.35);
-      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* ===========================
-       RESET & BASE
-    =========================== */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: var(--font-body);
-      background: var(--c-black);
-      color: var(--c-white);
-      overflow-x: hidden;
-    }
-
-    img { max-width: 100%; display: block; }
-
-    /* ===========================
-       SCROLLBAR
-    =========================== */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--c-deep); }
-    ::-webkit-scrollbar-thumb { background: var(--c-teal); border-radius: 3px; }
-
-    /* ===========================
-       NAV
-    =========================== */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem 1.5rem;
-      background: rgba(6, 11, 16, 0.7);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(0, 180, 216, 0.15);
-    }
-
-    .nav-logo {
-      font-family: var(--font-display);
-      font-size: 1.6rem;
-      letter-spacing: 2px;
-      color: var(--c-accent);
-      text-decoration: none;
-    }
-
-    .nav-cta {
-      display: none; /* shown on md+ */
-    }
-
-    /* ===========================
-       HERO SECTION
-    =========================== */
-    .hero {
-      position: relative;
-      min-height: 100svh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 7rem 1.5rem 4rem;
-      overflow: hidden;
-    }
-
-    /* Background image via Unsplash placeholder */
-    .hero__bg {
-      position: absolute;
-      inset: 0;
-      background:
-        url('https://media.larepubliquedespyrenees.fr/5783222/1000x625/pp-613901dfa43f5efe676a6ae2-ph0.jpg?v=1631435112')
-        center / cover no-repeat;
-      transform: scale(1.05);
-      animation: bgZoom 20s ease-in-out infinite alternate;
-    }
-
-    @keyframes bgZoom {
-      from { transform: scale(1.05); }
-      to   { transform: scale(1.12); }
-    }
-
-    /* Dark overlay with gradient */
-    .hero__overlay {
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(
-          160deg,
-          rgba(6, 11, 16, 0.85) 0%,
-          rgba(10, 25, 41, 0.75) 50%,
-          rgba(0, 68, 120, 0.6) 100%
-        );
-    }
-
-    /* Animated water wave line at bottom */
-    .hero__wave {
-      position: absolute;
-      bottom: -2px; left: 0; right: 0;
-      height: 80px;
-      overflow: hidden;
-    }
-
-    .hero__wave svg { width: 100%; height: 100%; }
-
-    .hero__content {
-      position: relative;
-      z-index: 2;
-      max-width: 800px;
-    }
-
-    /* Badge */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      background: rgba(255, 82, 82, 0.15);
-      border: 1px solid var(--c-danger);
-      color: var(--c-danger);
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      padding: 0.35rem 0.9rem;
-      border-radius: var(--radius-btn);
-      margin-bottom: 1.2rem;
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    .badge::before {
-      content: '';
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--c-danger);
-      animation: dot-blink 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.4); }
-      50%       { box-shadow: 0 0 0 8px rgba(255, 82, 82, 0); }
-    }
-
-    @keyframes dot-blink {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.2; }
-    }
-
-    .hero__title {
-      font-family: var(--font-display);
-      font-size: clamp(3.5rem, 13vw, 9rem);
-      line-height: 0.92;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--c-white);
-      margin-bottom: 0.4rem;
-    }
-
-    .hero__title span {
-      color: var(--c-accent);
-      display: block;
-      /* Glitch effect on accent word */
-      animation: glitch 2s steps(1) infinite;
-      text-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
-    }
-
-    @keyframes glitch {
-      0%, 95%, 100% { text-shadow: 0 0 20px rgba(0, 229, 255, 0.5); transform: none; }
-      96%  { text-shadow: -3px 0 #ff5252, 3px 0 #0d47a1; transform: skewX(-1deg); }
-      97%  { text-shadow: 3px 0 #ff5252, -3px 0 #0d47a1; transform: skewX(1deg); }
-      98%  { text-shadow: 0 0 20px rgba(0, 229, 255, 0.5); transform: none; }
-    }
-
-    .hero__sub {
-      font-size: clamp(1rem, 3vw, 1.3rem);
-      font-weight: 300;
-      color: rgba(240, 248, 255, 0.8);
-      max-width: 520px;
-      margin: 1.2rem auto 2.2rem;
-      line-height: 1.6;
-    }
-
-    /* CTA Button */
-    .btn-primary {
-      display: inline-block;
-      background: linear-gradient(135deg, var(--c-teal), var(--c-accent));
-      color: var(--c-black);
-      font-family: var(--font-body);
-      font-weight: 700;
-      font-size: 0.95rem;
-      text-decoration: none;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      padding: 1rem 2.2rem;
-      border-radius: var(--radius-btn);
-      border: none;
-      cursor: pointer;
-      box-shadow: var(--shadow-glow);
-      transition: var(--transition);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn-primary::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(255,255,255,0.15);
-      transform: translateX(-100%) skewX(-15deg);
-      transition: var(--transition);
-    }
-
-    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 50px rgba(0, 229, 255, 0.55); }
-    .btn-primary:hover::after { transform: translateX(120%) skewX(-15deg); }
-    .btn-primary:active { transform: translateY(0); }
-
-    .btn-secondary {
-      display: inline-block;
-      background: transparent;
-      color: var(--c-white);
-      font-family: var(--font-body);
-      font-weight: 500;
-      font-size: 0.9rem;
-      text-decoration: none;
-      letter-spacing: 1px;
-      padding: 0.9rem 2rem;
-      border-radius: var(--radius-btn);
-      border: 1.5px solid rgba(240, 248, 255, 0.4);
-      cursor: pointer;
-      transition: var(--transition);
-      margin-left: 0.75rem;
-    }
-
-    .btn-secondary:hover {
-      border-color: var(--c-accent);
-      color: var(--c-accent);
-    }
-
-    .hero__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
-
-    /* Scroll indicator */
-    .scroll-hint {
-      position: absolute;
-      bottom: 6rem; left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.4rem;
-      color: rgba(240, 248, 255, 0.5);
-      font-size: 0.7rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      z-index: 2;
-      animation: bounce 2.5s ease-in-out infinite;
-    }
-
-    .scroll-hint svg { width: 20px; height: 20px; }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50%       { transform: translateX(-50%) translateY(8px); }
-    }
-
-    /* ===========================
-       STATS BAR
-    =========================== */
-    .stats-bar {
-      background: linear-gradient(90deg, var(--c-deep), #0a2540, var(--c-deep));
-      border-top: 1px solid rgba(0, 180, 216, 0.2);
-      border-bottom: 1px solid rgba(0, 180, 216, 0.2);
-      padding: 1.5rem 1.5rem;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 2rem 3rem;
-    }
-
-    .stat {
-      text-align: center;
-    }
-
-    .stat__num {
-      font-family: var(--font-display);
-      font-size: 2.2rem;
-      color: var(--c-accent);
-      letter-spacing: 2px;
-    }
-
-    .stat__label {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: rgba(240, 248, 255, 0.5);
-      margin-top: 0.1rem;
-    }
-
-    /* ===========================
-       SECTION COMMONS
-    =========================== */
-    section { padding: 5rem 1.5rem; }
-
-    .section-label {
-      display: inline-block;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      color: var(--c-teal);
-      margin-bottom: 0.8rem;
-    }
-
-    .section-title {
-      font-family: var(--font-display);
-      font-size: clamp(2.2rem, 7vw, 4.5rem);
-      line-height: 1;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 1.2rem;
-    }
-
-    .section-title em {
-      font-style: normal;
-      color: var(--c-accent);
-    }
-
-    .section-desc {
-      font-size: 1rem;
-      font-weight: 300;
-      color: rgba(240, 248, 255, 0.65);
-      line-height: 1.7;
-      max-width: 520px;
-    }
-
-    /* ===========================
-       AVANTAGES SECTION
-    =========================== */
-    .avantages {
-      background: var(--c-deep);
-    }
-
-    .avantages__inner {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .avantages__header {
-      margin-bottom: 3rem;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.25rem;
-    }
-
-    .card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(0, 180, 216, 0.12);
-      border-radius: 16px;
-      padding: 1.8rem;
-      transition: var(--transition);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 3px; height: 100%;
-      background: linear-gradient(180deg, var(--c-teal), transparent);
-      opacity: 0;
-      transition: var(--transition);
-    }
-
-    .card:hover {
-      background: rgba(0, 180, 216, 0.06);
-      border-color: rgba(0, 180, 216, 0.4);
-      transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(0, 180, 216, 0.12);
-    }
-
-    .card:hover::before { opacity: 1; }
-
-    .card__icon {
-      font-size: 2.2rem;
-      margin-bottom: 1rem;
-      display: block;
-    }
-
-    .card__title {
-      font-family: var(--font-display);
-      font-size: 1.4rem;
-      letter-spacing: 1.5px;
-      color: var(--c-white);
-      margin-bottom: 0.6rem;
-    }
-
-    .card__text {
-      font-size: 0.9rem;
-      font-weight: 300;
-      color: rgba(240, 248, 255, 0.6);
-      line-height: 1.65;
-    }
-
-    .card__badge {
-      display: inline-block;
-      margin-top: 1rem;
-      background: rgba(0, 229, 255, 0.1);
-      border: 1px solid rgba(0, 229, 255, 0.3);
-      color: var(--c-accent);
-      font-size: 0.7rem;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      padding: 0.3rem 0.75rem;
-      border-radius: 50px;
-    }
-
-    /* ===========================
-       EXPERIENCE SECTION
-    =========================== */
-    .experience {
-      background: var(--c-black);
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Background decoration */
-    .experience::before {
-      content: '';
-      position: absolute;
-      top: -100px; right: -150px;
-      width: 500px; height: 500px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(0, 180, 216, 0.07) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .experience__inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 3rem;
-    }
-
-    .experience__img-wrap {
-      position: relative;
-      border-radius: 20px;
-      overflow: hidden;
-      aspect-ratio: 16/9;
-    }
-
-    .experience__img-wrap img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      transition: transform 0.6s ease;
-    }
-
-    .experience__img-wrap:hover img { transform: scale(1.04); }
-
-    .experience__img-wrap::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(6,11,16,0.6) 0%, transparent 50%);
-    }
-
-    .experience__img-label {
-      position: absolute;
-      bottom: 1rem; left: 1rem;
-      z-index: 2;
-      background: rgba(6, 11, 16, 0.7);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(0, 229, 255, 0.3);
-      color: var(--c-accent);
-      font-size: 0.75rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      padding: 0.4rem 0.9rem;
-      border-radius: 50px;
-    }
-
-    .checklist {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .checklist li {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.8rem;
-      font-size: 0.95rem;
-      color: rgba(240, 248, 255, 0.8);
-      line-height: 1.5;
-    }
-
-    .checklist li::before {
-      content: '✦';
-      color: var(--c-accent);
-      font-size: 0.8rem;
-      flex-shrink: 0;
-      margin-top: 0.2rem;
-    }
-
-    /* ===========================
-       URGENCY SECTION
-    =========================== */
-    .urgency {
-      background: linear-gradient(135deg, #0a1929 0%, #0d2137 40%, #091520 100%);
-      border-top: 1px solid rgba(0, 180, 216, 0.2);
-      border-bottom: 1px solid rgba(0, 180, 216, 0.2);
-      text-align: center;
-      padding: 5rem 1.5rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Ripple background decoration */
-    .urgency::before,
-    .urgency::after {
-      content: '';
-      position: absolute;
-      border-radius: 50%;
-      border: 1px solid rgba(0, 229, 255, 0.07);
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    .urgency::before { width: 400px; height: 400px; }
-    .urgency::after  { width: 700px; height: 700px; }
-
-    .urgency__inner {
-      position: relative;
-      z-index: 2;
-      max-width: 650px;
-      margin: 0 auto;
-    }
-
-    .urgency__title {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 8vw, 4rem);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--c-white);
-      margin-bottom: 1rem;
-    }
-
-    .urgency__highlight {
-      color: var(--c-danger);
-      display: block;
-    }
-
-    .urgency__text {
-      font-size: 1rem;
-      font-weight: 300;
-      color: rgba(240, 248, 255, 0.7);
-      line-height: 1.7;
-      margin-bottom: 2rem;
-    }
-
-    /* Progress bar */
-    .progress-wrap {
-      background: rgba(255, 255, 255, 0.06);
-      border-radius: 50px;
-      height: 8px;
-      margin: 0 auto 0.6rem;
-      max-width: 380px;
-      overflow: hidden;
-    }
-
-    .progress-bar {
-      height: 100%;
-      width: 73%;
-      background: linear-gradient(90deg, var(--c-teal), var(--c-danger));
-      border-radius: 50px;
-      animation: fillBar 2s ease-out forwards;
-    }
-
-    @keyframes fillBar {
-      from { width: 0; }
-      to   { width: 73%; }
-    }
-
-    .progress-label {
-      font-size: 0.75rem;
-      color: rgba(240, 248, 255, 0.5);
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    .progress-label strong { color: var(--c-danger); }
-
-    /* Countdown */
-    .countdown {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 2.5rem;
-    }
-
-    .cd-block {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(0, 180, 216, 0.2);
-      border-radius: 12px;
-      padding: 0.75rem 1.2rem;
-      min-width: 72px;
-      text-align: center;
-    }
-
-    .cd-num {
-      font-family: var(--font-display);
-      font-size: 2rem;
-      color: var(--c-accent);
-      letter-spacing: 2px;
-      display: block;
-    }
-
-    .cd-unit {
-      font-size: 0.6rem;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: rgba(240, 248, 255, 0.4);
-    }
-
-    /* ===========================
-       TESTIMONIAL
-    =========================== */
-    .testimonials {
-      background: var(--c-deep);
-      padding: 5rem 1.5rem;
-    }
-
-    .testimonials__inner {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .testimonials__header {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    .testi-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.25rem;
-    }
-
-    .testi-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(0, 180, 216, 0.1);
-      border-radius: 16px;
-      padding: 1.75rem;
-    }
-
-    .testi-stars {
-      color: var(--c-gold);
-      font-size: 0.9rem;
-      letter-spacing: 3px;
-      margin-bottom: 0.8rem;
-    }
-
-    .testi-quote {
-      font-size: 0.95rem;
-      font-weight: 300;
-      color: rgba(240, 248, 255, 0.75);
-      line-height: 1.7;
-      margin-bottom: 1.2rem;
-      font-style: italic;
-    }
-
-    .testi-author {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .testi-avatar {
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--c-blue), var(--c-teal));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 0.9rem;
-      color: var(--c-white);
-      flex-shrink: 0;
-    }
-
-    .testi-name { font-weight: 500; font-size: 0.85rem; }
-    .testi-role { font-size: 0.75rem; color: rgba(240, 248, 255, 0.45); }
-
-    /* ===========================
-       FINAL CTA
-    =========================== */
-    .final-cta {
-      background: var(--c-black);
-      text-align: center;
-      padding: 6rem 1.5rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .final-cta::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: none
-        center / cover no-repeat;
-      opacity: 0.08;
-    }
-
-    .final-cta__inner {
-      position: relative;
-      z-index: 2;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .price-tag {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 1.5rem 0 2rem;
-    }
-
-    .price-original {
-      font-size: 1rem;
-      color: rgba(240, 248, 255, 0.4);
-      text-decoration: line-through;
-    }
-
-    .price-current {
-      font-family: var(--font-display);
-      font-size: 3.5rem;
-      color: var(--c-accent);
-      letter-spacing: 3px;
-    }
-
-    .price-note {
-      font-size: 0.8rem;
-      color: rgba(240, 248, 255, 0.5);
-    }
-
-    /* ===========================
-       FOOTER
-    =========================== */
-    footer {
-      background: var(--c-deep);
-      border-top: 1px solid rgba(0, 180, 216, 0.1);
-      padding: 3rem 1.5rem 2rem;
-    }
-
-    .footer__inner {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .footer__top {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 2.5rem;
-    }
-
-    .footer__brand-name {
-      font-family: var(--font-display);
-      font-size: 2rem;
-      letter-spacing: 3px;
-      color: var(--c-accent);
-      margin-bottom: 0.5rem;
-    }
-
-    .footer__brand-desc {
-      font-size: 0.85rem;
-      color: rgba(240, 248, 255, 0.45);
-      max-width: 260px;
-      line-height: 1.6;
-    }
-
-    .footer__links h4 {
-      font-family: var(--font-display);
-      font-size: 0.9rem;
-      letter-spacing: 2px;
-      color: var(--c-teal);
-      margin-bottom: 0.75rem;
-    }
-
-    .footer__links ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .footer__links ul li a {
-      color: rgba(240, 248, 255, 0.45);
-      text-decoration: none;
-      font-size: 0.85rem;
-      transition: color var(--transition);
-    }
-
-    .footer__links ul li a:hover { color: var(--c-accent); }
-
-    .footer__bottom {
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      padding-top: 1.5rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .footer__copy {
-      font-size: 0.8rem;
-      color: rgba(240, 248, 255, 0.3);
-    }
-
-    .footer__social {
-      display: flex;
-      gap: 0.75rem;
-    }
-
-    .footer__social a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      border: 1px solid rgba(0, 180, 216, 0.2);
-      color: rgba(240, 248, 255, 0.5);
-      font-size: 0.8rem;
-      text-decoration: none;
-      transition: var(--transition);
-    }
-
-    .footer__social a:hover {
-      border-color: var(--c-accent);
-      color: var(--c-accent);
-      box-shadow: 0 0 12px rgba(0, 229, 255, 0.2);
-    }
-
-    /* ===========================
-       RESPONSIVE — TABLET+
-    =========================== */
-    @media (min-width: 640px) {
-      .cards { grid-template-columns: repeat(2, 1fr); }
-      .testi-grid { grid-template-columns: repeat(2, 1fr); }
-      .nav-cta { display: inline-block; }
-    }
-
-    @media (min-width: 900px) {
-      .cards { grid-template-columns: repeat(4, 1fr); }
-      .testi-grid { grid-template-columns: repeat(3, 1fr); }
-
-      .experience__inner {
-        grid-template-columns: 1fr 1fr;
-        align-items: center;
-      }
-    }
-
-    /* ===========================
-       FADE-IN ANIMATION on scroll
-    =========================== */
-    .reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: none;
-    }
-
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-    .reveal-delay-4 { transition-delay: 0.4s; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calendrier Slalom 2026-2027</title>
+<meta name="description" content="Calendrier des compétitions de slalom 2027 : N1, N2, N3, régionales et championnats, avec filtres.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF4F5;--card:#fff;--ink:#0E2A3A;--mute:#5B7280;--line:#D5E1E5;--accent:#0B6E8A;
+--n1:#C8302B;--n2:#1E7F4F;--n3:#0B6E8A;--r:#7A5AA6;--c:#E0A100;--o:#4A5D6B}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 Barlow,system-ui,sans-serif}
+header{background:var(--ink);color:#fff;padding:28px 20px 22px}
+.wrap{max-width:900px;margin:0 auto}
+h1{font:700 clamp(34px,7vw,56px)/1 "Barlow Condensed",Impact,sans-serif;margin:0 0 6px;letter-spacing:.5px}
+header p{margin:0;color:#A9C4CE}
+.bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:12px 20px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{border:2px solid var(--col,var(--ink));background:#fff;color:var(--ink);border-radius:999px;padding:7px 14px;font:600 15px Barlow,sans-serif;cursor:pointer;transition:background .15s,color .15s}
+.chip[aria-pressed=true]{background:var(--col);color:#fff}
+.chip[data-l=C][aria-pressed=true]{color:var(--ink)}
+.chip small{opacity:.75;margin-left:4px}
+.chip:focus-visible,input:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid #FFB000;outline-offset:2px}
+.tools{margin-top:10px}
+input[type=search],select{font:500 15px Barlow,sans-serif;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+input[type=search]{flex:1 1 200px;min-width:0}
+label.sw{display:flex;gap:6px;align-items:center;font-size:15px;cursor:pointer}
+.link{background:none;border:0;color:var(--accent);font:600 15px Barlow,sans-serif;cursor:pointer;text-decoration:underline;padding:6px}
+#count{color:var(--mute);font-size:14px;margin-left:auto}
+main{padding:8px 20px 60px}
+h2{font:700 26px "Barlow Condensed",sans-serif;margin:28px 0 10px;text-transform:capitalize;display:flex;align-items:baseline;gap:10px}
+h2 span{font:500 14px Barlow,sans-serif;color:var(--mute)}
+.ev{display:grid;grid-template-columns:72px 1fr;gap:14px;background:var(--card);border:1px solid var(--line);border-left:6px solid var(--col);border-radius:10px;padding:12px 14px;margin-bottom:8px}
+.ev.past{opacity:.5}
+.ev.next{box-shadow:0 0 0 2px var(--col)}
+.d{text-align:center;line-height:1}
+.d b{display:block;font:700 34px "Barlow Condensed",sans-serif}
+.d i{font-style:normal;font-size:13px;color:var(--mute);text-transform:capitalize}
+.t{font-weight:600;font-size:18px;line-height:1.2}
+.s{color:var(--mute);font-size:14px;margin-top:2px}
+.tag{display:inline-block;background:var(--col);color:#fff;font:700 13px "Barlow Condensed",sans-serif;letter-spacing:.5px;padding:1px 8px;border-radius:4px;margin-right:6px;vertical-align:2px}
+.tag[data-l=C]{color:var(--ink)}
+.nx{font:600 12px Barlow,sans-serif;color:var(--col);margin-left:6px}
+.empty{text-align:center;color:var(--mute);padding:50px 0}
+@media(max-width:520px){.ev{grid-template-columns:58px 1fr;gap:10px}.d b{font-size:28px}#count{width:100%;margin:0}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
 </head>
 <body>
-
-  <!-- ========================
-       NAVIGATION
-  ========================= -->
-  <nav aria-label="Navigation principale">
-    <a href="#" class="nav-logo">SLALOM<span style="color:var(--c-white);">PRO</span></a>
-    <a href="#reserver" class="btn-primary nav-cta">Réserver maintenant</a>
-  </nav>
-
-  <!-- ========================
-       HERO
-  ========================= -->
-  <section class="hero" id="hero" aria-labelledby="hero-title">
-
-    <div class="hero__bg" role="presentation" aria-hidden="true"></div>
-    <div class="hero__overlay" aria-hidden="true"></div>
-
-    <div class="hero__content">
-
-      <!-- Badge urgence -->
-      <span class="badge" role="status">Places limitées — Accès anticipé</span>
-
-      <h1 class="hero__title" id="hero-title">
-        Affrontez
-        <span>les courants</span>
-      </h1>
-
-      <p class="hero__sub">
-        Vivez l'adrénaline du slalom en eau vive sur des bassins d'exception, encadré par des champions internationaux.
-      </p>
-
-      <div class="hero__actions">
-        <a href="#reserver" class="btn-primary">🏄 Réserver mon accès anticipé</a>
-        <a href="#avantages" class="btn-secondary">Découvrir le stage</a>
-      </div>
-
-    </div>
-
-    <!-- Scroll hint -->
-    <div class="scroll-hint" aria-hidden="true">
-      <span>Découvrir</span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M12 5v14M5 12l7 7 7-7"/>
-      </svg>
-    </div>
-
-    <!-- Wave séparateur -->
-    <div class="hero__wave" aria-hidden="true">
-      <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z" fill="#060b10"/>
-      </svg>
-    </div>
-
-  </section>
-
-  <!-- ========================
-       STATS BAR
-  ========================= -->
-  <div class="stats-bar" role="region" aria-label="Chiffres clés">
-    <div class="stat reveal">
-      <div class="stat__num">8+</div>
-      <div class="stat__label">Années d'expérience</div>
-    </div>
-    <div class="stat reveal reveal-delay-1">
-      <div class="stat__num">120+</div>
-      <div class="stat__label">Stagiaires formés</div>
-    </div>
-    <div class="stat reveal reveal-delay-2">
-      <div class="stat__num">12</div>
-      <div class="stat__label">Bassins homologués</div>
-    </div>
-    <div class="stat reveal reveal-delay-3">
-      <div class="stat__num">98%</div>
-      <div class="stat__label">Satisfaction garantie</div>
-    </div>
-  </div>
-
-  <!-- ========================
-       AVANTAGES
-  ========================= -->
-  <section class="avantages" id="avantages" aria-labelledby="avantages-title">
-    <div class="avantages__inner">
-
-      <header class="avantages__header reveal">
-        <span class="section-label">Pourquoi nous choisir</span>
-        <h2 class="section-title" id="avantages-title">
-          Une expérience<br/><em>hors du commun</em>
-        </h2>
-        <p class="section-desc">
-          Nos stages en accès anticipé vous donnent accès à des conditions et un encadrement normalement réservés aux athlètes de haut niveau.
-        </p>
-      </header>
-
-      <div class="cards">
-
-        <article class="card reveal reveal-delay-1">
-          <span class="card__icon" aria-hidden="true">⚡</span>
-          <h3 class="card__title">Accès anticipé</h3>
-          <p class="card__text">Soyez parmi les premiers à réserver vos créneaux avant l'ouverture au grand public. Dates exclusives, bassins vides.</p>
-          <span class="card__badge">Exclusif</span>
-        </article>
-
-        <article class="card reveal reveal-delay-2">
-          <span class="card__icon" aria-hidden="true">🏅</span>
-          <h3 class="card__title">Experts certifiés</h3>
-          <p class="card__text">Nos coachs sont des anciens compétiteurs de niveau national et international. Chaque geste est analysé et corrigé.</p>
-          <span class="card__badge">Pro</span>
-        </article>
-
-        <article class="card reveal reveal-delay-3">
-          <span class="card__icon" aria-hidden="true">🌊</span>
-          <h3 class="card__title">Bassins d'élite</h3>
-          <p class="card__text">Accédez à des bassins de slalom homologués compétition, parmi les plus réputés d'Europe — normalement fermés au public.</p>
-          <span class="card__badge">Premium</span>
-        </article>
-
-        <article class="card reveal reveal-delay-4">
-          <span class="card__icon" aria-hidden="true">🔥</span>
-          <h3 class="card__title">Sensations fortes</h3>
-          <p class="card__text">Du courant, des portes, de l'adrénaline. Un programme conçu pour vous faire progresser vite et vivre des émotions intenses.</p>
-          <span class="card__badge">Garanti</span>
-        </article>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ========================
-       EXPERIENCE
-  ========================= -->
-  <section class="experience" aria-labelledby="experience-title">
-    <div class="experience__inner">
-
-      <div class="experience__img-wrap reveal">
-        <img
-          src="https://images.unsplash.com/photo-1750539358-b5e7a90b7df9?auto=format&fit=crop&w=1200&q=80"
-          alt="Bassin de slalom canoë-kayak en compétition avec portes et rapides"
-          loading="lazy"
-          onerror="this.src='https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1200&q=80'"
-        />
-        <span class="experience__img-label">Bassin de slalom — Compétition ICF</span>
-      </div>
-
-      <div class="reveal reveal-delay-2">
-        <span class="section-label">Le programme</span>
-        <h2 class="section-title" id="experience-title">
-          Tout est<br/><em>inclus</em>
-        </h2>
-        <p class="section-desc" style="margin-bottom:1.8rem;">
-          Un stage complet, du matériel haut de gamme et un suivi personnalisé pour garantir votre progression.
-        </p>
-
-        <ul class="checklist">
-          <li>Équipement complet fourni (kayak, pagaie, casque, gilet)</li>
-          <li>3 jours intensifs sur le bassin avec 6h de pratique par jour</li>
-          <li>Analyse vidéo de votre technique après chaque session</li>
-          <li>Cours théoriques sur la lecture des eaux vives</li>
-          <li>Accès à la salle de musculation dédiée kayak</li>
-          <li>Hébergement et restauration sportive disponibles</li>
-          <li>Certificat de niveau remis à la fin du stage</li>
-        </ul>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================
-       URGENCY
-  ========================= -->
-  <section class="urgency" id="urgency" aria-labelledby="urgency-title">
-    <div class="urgency__inner">
-
-      <span class="section-label">Dépêchez-vous</span>
-
-      <h2 class="urgency__title" id="urgency-title">
-        Stock limité
-        <span class="urgency__highlight">Premiers inscrits prioritaires</span>
-      </h2>
-
-      <p class="urgency__text">
-        Seules <strong style="color:var(--c-white);">8 places</strong> restantes pour la prochaine session. Une fois ces places prises, vous rejoindrez la liste d'attente. Ne laissez pas quelqu'un d'autre prendre votre place.
-      </p>
-
-      <!-- Progress bar -->
-      <div class="progress-wrap" role="progressbar" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100" aria-label="Remplissage des places">
-        <div class="progress-bar"></div>
-      </div>
-      <p class="progress-label"><strong>73% des places déjà réservées</strong> — 8 restantes</p>
-
-      <!-- Countdown -->
-      <div class="countdown" aria-label="Compte à rebours de l'offre">
-        <div class="cd-block">
-          <span class="cd-num" id="cd-days">02</span>
-          <span class="cd-unit">Jours</span>
-        </div>
-        <div class="cd-block">
-          <span class="cd-num" id="cd-hours">14</span>
-          <span class="cd-unit">Heures</span>
-        </div>
-        <div class="cd-block">
-          <span class="cd-num" id="cd-min">37</span>
-          <span class="cd-unit">Min</span>
-        </div>
-        <div class="cd-block">
-          <span class="cd-num" id="cd-sec">00</span>
-          <span class="cd-unit">Sec</span>
-        </div>
-      </div>
-
-      <a href="#reserver" class="btn-primary" style="font-size:1rem;padding:1.1rem 2.8rem;">
-        🏄 Réserver mon accès anticipé
-      </a>
-
-    </div>
-  </section>
-
-  <!-- ========================
-       TESTIMONIALS
-  ========================= -->
-  <section class="testimonials" aria-labelledby="testi-title">
-    <div class="testimonials__inner">
-
-      <header class="testimonials__header reveal">
-        <span class="section-label">Ils ont osé</span>
-        <h2 class="section-title" id="testi-title">Ce qu'ils <em>vivent</em></h2>
-      </header>
-
-      <div class="testi-grid">
-
-        <article class="testi-card reveal reveal-delay-1">
-          <div class="testi-stars" aria-label="5 étoiles">★★★★★</div>
-          <p class="testi-quote">"Une expérience totalement hors norme. Les coachs sont incroyables et le bassin est spectaculaire. J'ai progressé en 3 jours autant qu'en 2 ans de pratique seul."</p>
-          <div class="testi-author">
-            <div class="testi-avatar" aria-hidden="true">ML</div>
-            <div>
-              <div class="testi-name">Martin L.</div>
-              <div class="testi-role">Participant — Stage Niveau 2</div>
-            </div>
-          </div>
-        </article>
-
-        <article class="testi-card reveal reveal-delay-2">
-          <div class="testi-stars" aria-label="5 étoiles">★★★★★</div>
-          <p class="testi-quote">"Le rapport qualité-prix est imbattable pour ce niveau d'encadrement. J'ai tout de suite réservé pour le prochain stage. Absolument addictif !"</p>
-          <div class="testi-author">
-            <div class="testi-avatar" aria-hidden="true">SC</div>
-            <div>
-              <div class="testi-name">Sophie C.</div>
-              <div class="testi-role">Participante — Stage Initiation</div>
-            </div>
-          </div>
-        </article>
-
-        <article class="testi-card reveal reveal-delay-3">
-          <div class="testi-stars" aria-label="5 étoiles">★★★★★</div>
-          <p class="testi-quote">"Ce stage m'a donné envie de me lancer dans la compétition. Les sensations sur ce bassin sont uniques, et l'ambiance entre participants est géniale."</p>
-          <div class="testi-author">
-            <div class="testi-avatar" aria-hidden="true">PR</div>
-            <div>
-              <div class="testi-name">Pierre R.</div>
-              <div class="testi-role">Participant — Stage Performance</div>
-            </div>
-          </div>
-        </article>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ========================
-       FINAL CTA
-  ========================= -->
-  <section class="final-cta" id="reserver" aria-labelledby="cta-title">
-    <div class="final-cta__inner reveal">
-
-      <span class="section-label">Prêt à vous lancer ?</span>
-      <h2 class="section-title" id="cta-title">
-        Votre aventure<br/><em>commence ici</em>
-      </h2>
-
-      <p style="font-size:0.95rem;color:rgba(240,248,255,0.65);line-height:1.7;margin-bottom:1rem;">
-        Offre d'accès anticipé disponible pour un temps limité. Prix exclusif réservé aux premiers inscrits.
-      </p>
-
-      <div class="price-tag">
-        <span class="price-original">Prix public : 490 €</span>
-        <span class="price-current">349 €</span>
-        <span class="price-note">Stage 3 jours — tout inclus — paiement sécurisé</span>
-      </div>
-
-      <a href="mailto:contact@slalompro.fr" class="btn-primary" style="font-size:1.05rem;padding:1.2rem 3rem;margin-bottom:1rem;">
-        🏄 Réserver mon accès anticipé
-      </a>
-
-      <p style="font-size:0.8rem;color:rgba(240,248,255,0.35);margin-top:1rem;">
-        Annulation gratuite jusqu'à 14 jours avant le stage · Paiement 100% sécurisé
-      </p>
-
-    </div>
-  </section>
-
-  <!-- ========================
-       FOOTER
-  ========================= -->
-  <footer aria-label="Pied de page">
-    <div class="footer__inner">
-
-      <div class="footer__top">
-
-        <div>
-          <div class="footer__brand-name">SLALOMPRO</div>
-          <p class="footer__brand-desc">
-            Stages et expériences canoë-kayak slalom de haut niveau, ouverts à tous les pratiquants passionnés.
-          </p>
-        </div>
-
-        <div class="footer__links">
-          <h4>Navigation</h4>
-          <ul>
-            <li><a href="#hero">Accueil</a></li>
-            <li><a href="#avantages">Avantages</a></li>
-            <li><a href="#urgency">Offre</a></li>
-            <li><a href="#reserver">Réserver</a></li>
-          </ul>
-        </div>
-
-        <div class="footer__links">
-          <h4>Informations</h4>
-          <ul>
-            <li><a href="#">Mentions légales</a></li>
-            <li><a href="#">CGV</a></li>
-            <li><a href="#">Politique de confidentialité</a></li>
-            <li><a href="mailto:contact@slalompro.fr">Contact</a></li>
-          </ul>
-        </div>
-
-      </div>
-
-      <div class="footer__bottom">
-        <p class="footer__copy">© 2025 SlalomPro — Tous droits réservés.</p>
-        <div class="footer__social" aria-label="Réseaux sociaux">
-          <a href="#" aria-label="Instagram">IG</a>
-          <a href="#" aria-label="Facebook">FB</a>
-          <a href="#" aria-label="YouTube">YT</a>
-        </div>
-      </div>
-
-    </div>
-  </footer>
-
-  <!-- ========================
-       SCRIPTS
-  ========================= -->
-  <script>
-    // === Countdown Timer ===
-    (function () {
-      // Set deadline to 2 days 14h 37min from now
-      const deadline = new Date().getTime() + (2 * 24 * 3600 + 14 * 3600 + 37 * 60) * 1000;
-
-      function pad(n) { return String(n).padStart(2, '0'); }
-
-      function tick() {
-        const now = new Date().getTime();
-        const diff = deadline - now;
-
-        if (diff <= 0) {
-          document.getElementById('cd-days').textContent = '00';
-          document.getElementById('cd-hours').textContent = '00';
-          document.getElementById('cd-min').textContent = '00';
-          document.getElementById('cd-sec').textContent = '00';
-          return;
-        }
-
-        const days  = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const mins  = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const secs  = Math.floor((diff % (1000 * 60)) / 1000);
-
-        document.getElementById('cd-days').textContent  = pad(days);
-        document.getElementById('cd-hours').textContent = pad(hours);
-        document.getElementById('cd-min').textContent   = pad(mins);
-        document.getElementById('cd-sec').textContent   = pad(secs);
-      }
-
-      tick();
-      setInterval(tick, 1000);
-    })();
-
-    // === Scroll reveal ===
-    (function () {
-      const items = document.querySelectorAll('.reveal');
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
-              observer.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: 0.12 }
-      );
-
-      items.forEach((el) => observer.observe(el));
-    })();
-
-    // === Smooth scroll for anchor links ===
-    document.querySelectorAll('a[href^="#"]').forEach((link) => {
-      link.addEventListener('click', (e) => {
-        const target = document.querySelector(link.getAttribute('href'));
-        if (target) {
-          e.preventDefault();
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      });
-    });
-  </script>
-
+<header><div class="wrap"><h1>Calendrier Slalom</h1>
+<p>Compétitions à venir, d'octobre 2026 à fin 2027 : N1, N2, N3, régionales, open et championnats. Source : FFCK, édité le 22/10/2026.</p></div></header>
+
+<div class="bar"><div class="wrap">
+<div class="row" id="chips" role="group" aria-label="Niveau de compétition"></div>
+<div class="row tools">
+<input type="search" id="q" placeholder="Chercher un lieu, un club…" aria-label="Recherche">
+<select id="m" aria-label="Mois"></select>
+<label class="sw"><input type="checkbox" id="fut"> Masquer les passées</label>
+<button class="link" id="rst">Réinitialiser</button>
+<span id="count" aria-live="polite"></span>
+</div></div></div>
+
+<main><div class="wrap" id="list"></div></main>
+
+<script>
+const D=[
+["2026-10-24","2026-10-25","Sélectif Régional Slalom (Double)","Bizanos","Pau Canoë-Kayak Club Universitaire"],
+["2026-10-24","2026-10-25","Compétition Régionale de Slalom","Bizanos","Pau Canoë-Kayak Club Universitaire"],
+["2026-10-31","2026-11-01","Sélectif Régional de slalom","Foix","Foix Canoë Kayak Eau Vive"],
+["2026-11-07","2026-11-08","Sélectif Régional Slalom (Double)","Cessenon-sur-Orb","Canoë Kayak Club Cessenon"],
+["2026-11-07","2026-11-08","Sélectif Régional Slalom (Double)","Metz","Comité Régional Grand Est CK"],
+["2026-11-14","2026-11-15","Compétition Régionale de Slalom","Val-de-Reuil","Val de Reuil Pagaie Passion"],
+["2026-11-14","2026-11-15","Sélectif Régional Slalom (Double)","Orthez","Orthez Nautique C.K."],
+["2026-11-15","2026-11-15","Compétition Régionale de Slalom","Picquigny","Picquigny Vieille Somme"],
+["2026-11-21","2026-11-22","Sélectif Régional Slalom (Double)","Nay","U.S.C. Nay Canoë Kayak"],
+["2026-11-21","2026-11-22","Sélectif Régional Slalom (Double)","Angoulême","Angoulême Canoë Kayak"],
+["2026-11-28","2026-11-28","Short Race Beaurainville","Beaurainville","C.K.C. Beaurainvillois",1],
+["2026-11-29","2026-11-29","Championnat Régional de Slalom","Beaurainville","C.K.C. Beaurainvillois"],
+["2026-11-29","2026-11-29","Compétition Régionale de Slalom","Lannion","Lannion Canoë Kayak"],
+["2026-12-06","2026-12-06","Sélectif Régional de slalom","Pont-Aven","La Pagaie des Avens"],
+["2026-12-12","2026-12-13","Championnat Régional de Slalom","Inzinzac-Lochrist","Club Loisirs Pop. Lochrist"],
+["2026-12-12","2026-12-13","Compétition Régionale de Slalom","Mirande","Club Mirandais de Canoë Kayak"],
+["2027-01-17","2027-01-17","Compétition Régionale de Slalom","Guingamp","C.K.C. Guingampais"],
+["2027-01-23","2027-01-23","Championnat Régional de Slalom","Sainte-Suzanne","Niagara Canoë Kayak Club"],
+["2027-01-31","2027-01-31","Sélectif Régional de slalom","Landerneau","Les Alligators - Landerneau"],
+["2027-02-07","2027-02-07","Sélectif Régional de slalom","Mehun-sur-Yèvre","Canoë Kayak Club de Mehun"],
+["2027-02-20","2027-02-21","Manche de la Coupe de France National 3","Clisson","Canoë Kayak Clisson"],
+["2027-02-20","2027-02-21","Manche de la Coupe de France National 3","Montreuil","Canoë Kayak Montreuil"],
+["2027-02-20","2027-02-21","Manche de la Coupe de France National 3","Vallon-Pont-d'Arc","V.P.A. Pont d'Arc"],
+["2027-02-20","2027-02-21","Manche de la Coupe de France National 3","Strasbourg","ASCPA C.K. Strasbourg"],
+["2027-02-20","2027-02-21","Manche de la Coupe de France National 3","Saint-Benoît","Canoë Kayak Club Poitevin"],
+["2027-02-27","2027-02-28","Manche de la Coupe de France National 1","Vaires-sur-Marne","Comité Régional Île-de-France CK"],
+["2027-03-06","2027-03-07","Manche de la Coupe de France National 2","Le Bourget-du-Lac","Chambéry Le Bourget Canoë Kayak"],
+["2027-03-06","2027-03-07","Manche de la Coupe de France National 2","Lannion","Lannion Canoë Kayak"],
+["2027-03-27","2027-03-28","Manche de la Coupe de France National 1","Cesson-Sévigné","Cesson Sévigné CK Les Poissons Volants"],
+["2027-03-27","2027-03-29","Manche de la Coupe de France National 1","Cesson-Sévigné","Cesson Sévigné CK Les Poissons Volants"],
+["2027-04-03","2027-04-03","Championnat Régional de Slalom","Sainte-Suzanne","Niagara Canoë Kayak Club"],
+["2027-04-03","2027-04-04","Manche de la Coupe de France National 2","Châteauneuf-sur-Cher","Châteauneuf Pagaie Aventure"],
+["2027-04-17","2027-04-18","Manche de la Coupe de France National 3","Sauveterre-de-Béarn","U.S. Sauveterre C.K."],
+["2027-04-17","2027-04-18","Manche de la Coupe de France National 3","Inzinzac-Lochrist","Club Loisirs Pop. Lochrist"],
+["2027-04-17","2027-04-18","Manche de la Coupe de France National 3","Audincourt","C.K. Audincourtois"],
+["2027-04-17","2027-04-18","Manche de la Coupe de France National 3","Chancia","Eaux Vives Oyonnax C.K."],
+["2027-04-17","2027-04-18","Manche de la Coupe de France National 3","Brionne","Canoë Kayak Club Brionne"],
+["2027-05-01","2027-05-02","Manche de la Coupe de France National 3","Veigne","Val de l'Indre Canoë Kayak"],
+["2027-05-01","2027-05-02","Manche de la Coupe de France National 3","Millau","CK MJC Millau"],
+["2027-05-06","2027-05-07","Manche de la Coupe de France National 3","Beaurainville","C.K.C. Beaurainvillois"],
+["2027-05-15","2027-05-17","Manche de la Coupe de France National 2","Metz","Kayak Club de Metz"],
+["2027-05-22","2027-05-23","Manche de la Coupe de France National 1","Foix","Foix Canoë Kayak Eau Vive"],
+["2027-06-05","2027-06-06","Finale de la Coupe de France National 2","Orthez","Orthez Nautique C.K."],
+["2027-06-12","2027-06-13","Manche de la Coupe de France National 3","Saint-Pierre-de-Bœuf","Grenoble Alpes Canoë Kayak"],
+["2027-06-12","2027-06-13","Manche de la Coupe de France National 3","Sélestat","C.K.C. de l'Ill Sélestat"],
+["2027-06-12","2027-06-13","Manche de la Coupe de France National 3","Angoulême","Angoulême Canoë Kayak"],
+["2027-06-20","2027-06-20","Compétition Régionale de Slalom","Plumeliau-Bieuzy","Plumeliau Canoë Kayak"],
+["2027-07-19","2027-07-25","Manche de la Coupe de France National 1","Bourg-Saint-Maurice","Comité Régional CK Auvergne-Rhône-Alpes"],
+["2027-07-19","2027-07-25","Championnat de France Slalom Jeunes et Équipages","Bourg-Saint-Maurice","Comité Régional CK Auvergne-Rhône-Alpes"],
+["2027-07-19","2027-07-25","Championnat de France Slalom par Équipe de Clubs","Bourg-Saint-Maurice","Comité Régional CK Auvergne-Rhône-Alpes"],
+["2027-10-09","2027-10-10","Championnat de France Slalom Élite","Épinal","Golbey Épinal St Nabord"],
+["2027-10-30","2027-10-31","Finale de la Coupe de France National 3","Vaires-sur-Marne","Comité Régional Île-de-France CK"]
+];
+const L={N1:["N1","var(--n1)"],N2:["N2","var(--n2)"],N3:["N3","var(--n3)"],R:["Régional","var(--r)"],C:["Championnats","var(--c)"],O:["Open","var(--o)"]};
+const lvl=n=>/National 1/.test(n)?"N1":/National 2/.test(n)?"N2":/National 3/.test(n)?"N3":/Régional/.test(n)?"R":"C";
+const E=D.map(([s,e,n,l,o,op])=>({s,e,n,l,o,k:op?"O":lvl(n),h:(n+l+o).toLowerCase()}));
+const $=id=>document.getElementById(id);
+const norm=t=>t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+E.sort((a,b)=>a.s.localeCompare(b.s)||a.e.localeCompare(b.e));
+E.forEach(x=>x.h=norm(x.n+" "+x.l+" "+x.o));
+const mois=d=>new Date(d+"T12:00").toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
+const fm=(d,o)=>new Date(d+"T12:00").toLocaleDateString("fr-FR",o);
+const today=new Date().toISOString().slice(0,10);
+const st={k:new Set(),q:"",m:"",fut:false};
+
+// Chips
+$("chips").innerHTML=Object.entries(L).map(([k,[t,c]])=>`<button class="chip" data-l="${k}" style="--col:${c}" aria-pressed="false">${t}<small>${E.filter(x=>x.k==k).length}</small></button>`).join("");
+// Mois
+const ms=[...new Set(E.map(x=>x.s.slice(0,7)))];
+$("m").innerHTML='<option value="">Tous les mois</option>'+ms.map(m=>`<option value="${m}">${mois(m+"-01")}</option>`).join("");
+
+function hashSave(){
+  const p=new URLSearchParams();
+  if(st.k.size)p.set("n",[...st.k].join(","));
+  if(st.q)p.set("q",st.q);if(st.m)p.set("m",st.m);if(st.fut)p.set("f","1");
+  history.replaceState(null,"",p.toString()?"#"+p:location.pathname);
+}
+function hashLoad(){
+  const p=new URLSearchParams(location.hash.slice(1));
+  st.k=new Set((p.get("n")||"").split(",").filter(k=>L[k]));
+  st.q=p.get("q")||"";st.m=p.get("m")||"";st.fut=p.get("f")=="1";
+  $("q").value=st.q;$("m").value=st.m;$("fut").checked=st.fut;
+}
+function render(){
+  const q=norm(st.q.trim());
+  const res=E.filter(x=>(!st.k.size||st.k.has(x.k))&&(!st.m||x.s.startsWith(st.m))&&(!st.fut||x.e>=today)&&(!q||q.split(/\s+/).every(w=>x.h.includes(w))));
+  document.querySelectorAll(".chip").forEach(b=>b.setAttribute("aria-pressed",st.k.has(b.dataset.l)));
+  $("count").textContent=res.length+" compétition"+(res.length>1?"s":"");
+  const nextId=res.find(x=>x.e>=today);
+  let html="",cur="";
+  res.forEach(x=>{
+    const mo=x.s.slice(0,7);
+    if(mo!=cur){cur=mo;const n=res.filter(y=>y.s.startsWith(mo)).length;html+=`<h2>${mois(mo+"-01")}<span>${n}</span></h2>`}
+    const multi=x.s!=x.e,[t,c]=L[x.k];
+    const day=multi?(x.s.slice(5,7)==x.e.slice(5,7)?`${+x.s.slice(8)}–${+x.e.slice(8)}`:`${+x.s.slice(8)}→${+x.e.slice(8)}`):+x.s.slice(8);
+    const sub=multi?`${fm(x.s,{weekday:"short"})} → ${fm(x.e,{weekday:"short"})}`:fm(x.s,{weekday:"long"});
+    html+=`<article class="ev${x.e<today?" past":""}${x===nextId?" next":""}" style="--col:${c}">
+<div class="d"><b>${day}</b><i>${sub}</i></div>
+<div><div class="t"><span class="tag" data-l="${x.k}">${t==="Championnats"?"CF":t==="Régional"?"RÉG":t}</span>${x.l}${x===nextId?'<span class="nx">Prochaine</span>':""}</div>
+<div class="s">${x.n}</div><div class="s">${x.o}</div></div></article>`;
+  });
+  $("list").innerHTML=html||'<p class="empty">Aucune compétition ne correspond. Essayez d\'enlever un filtre.</p>';
+  hashSave();
+}
+$("chips").onclick=e=>{const b=e.target.closest(".chip");if(!b)return;const k=b.dataset.l;st.k.has(k)?st.k.delete(k):st.k.add(k);render()};
+$("q").oninput=e=>{st.q=e.target.value;render()};
+$("m").onchange=e=>{st.m=e.target.value;render()};
+$("fut").onchange=e=>{st.fut=e.target.checked;render()};
+$("rst").onclick=()=>{st.k.clear();st.q="";st.m="";st.fut=false;$("q").value="";$("m").value="";$("fut").checked=false;render()};
+hashLoad();render();
+</script>
 </body>
 </html>
